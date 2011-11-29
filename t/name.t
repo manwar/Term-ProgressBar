@@ -13,8 +13,7 @@ use FindBin       qw( $Bin );
 use Test          qw( ok plan );
 
 use lib $Bin;
-use test qw( 
-             evcheck restore_output save_output );
+use test qw( evcheck );
 
 use constant MESSAGE1 => 'The Gospel of St. Jude';
 use constant NAME1    => 'Algenon';
@@ -58,22 +57,25 @@ Update it it from 1 to 10.
 
 =cut
 
+use Capture::Tiny qw(capture);
+
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
+my ($out, $err) = capture {
   ok (evcheck(sub {
                 $p = Term::ProgressBar->new({count => 10, name => NAME1});
               },                                            'Count 1-10 ( 1)'),
       1,                                                    'Count 1-10 ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
       1,                                                    'Count 1-10 ( 2)');
-
-  my $err = restore_output('stderr');
+};
+print $out;
 
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR (1) :\n$err\nlength: ", length($err), "\n"
     if $ENV{TEST_DEBUG};
   my @lines = split /\n/, $err;
+
   ok $lines[-1], qr/^@{[NAME1()]}: \s*\b30%/,                'Count 1-10 ( 3)';
   my ($bar, $space) = $lines[-1] =~ /\[(=*)(\s*)\]/;
   my $length = length($bar) + length($space);
@@ -84,13 +86,14 @@ Update it it from 1 to 10.
   my $ok = length($bar) > $barexpect -1 && length($bar) < $barexpect+1;
   ok $ok;
 
-  save_output('stderr', *STDERR{IO});
+($out, $err) = capture {
 
   ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
       1,                                                    'Count 1-10 ( 5)');
   ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
       1,                                                    'Count 1-10 ( 6)');
-  $err = restore_output('stderr');
+};
+print $out;
 
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR (2) :\n$err\nlength: ", length($err), "\n"
@@ -125,19 +128,20 @@ Use v1 mode
 
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
+my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new(NAME2, 10); }, 
                                                             'Count 1-10 ( 1)'),
       1,                                                    'Count 1-10 ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
       1,                                                    'Count 1-10 ( 2)');
-
-  my $err = restore_output('stderr');
+};
+print $out;
 
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR (1) :\n$err\nlength: ", length($err), "\n"
     if $ENV{TEST_DEBUG};
   my @lines = split /\n/, $err;
+
   ok $lines[-1], qr/^@{[NAME2()]}: \s*\b30%/,                'Count 1-10 ( 3)';
   my ($bar, $space) = $lines[-1] =~ /(\#*)(\s*)/;
   my $length = length($bar) + length($space);
@@ -147,15 +151,14 @@ Use v1 mode
   my $barexpect = $length * 0.3;
   my $ok = length($bar) > $barexpect -1 && length($bar) < $barexpect+1;
   ok $ok;
-
-  save_output('stderr', *STDERR{IO});
-
+  
+($out, $err) = capture {
   ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
       1,                                                    'Count 1-10 ( 5)');
   ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
       1,                                                    'Count 1-10 ( 6)');
-  $err = restore_output('stderr');
-
+};
+print $out;
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR (2) :\n$err\nlength: ", length($err), "\n"
     if $ENV{TEST_DEBUG};

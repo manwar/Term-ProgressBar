@@ -13,9 +13,11 @@ use FindBin 1.42 qw( $Bin );
 use Test 1.122 qw( ok plan );
 
 use lib $Bin;
-use test qw( evcheck restore_output save_output );
+use test qw( evcheck );
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
+
+use Capture::Tiny qw(capture);
 
 BEGIN {
   # 1 for compilation test,
@@ -53,9 +55,8 @@ Update it it from 1 to 10.  Output a message halfway through.
 
 =cut
 
-{
+my ($out, $err) = capture {
   my $p;
-  save_output('stderr', *STDERR{IO});
   ok (evcheck(sub { $p = Term::ProgressBar->new(10); }, 'Count 1-10 (1)' ),
       1, 'Count 1-10 (1)');
   ok (evcheck(sub { $p->update($_) for 1..5  }, 'Count 1-10 (2)' ),
@@ -64,7 +65,8 @@ Update it it from 1 to 10.  Output a message halfway through.
       1, 'Count 1-10 (3)');
   ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
       1, 'Count 1-10 (4)');
-  my $err = restore_output('stderr');
+};
+print $out;
 
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR:\n$err\nlength: ", length($err), "\n"
@@ -75,7 +77,6 @@ Update it it from 1 to 10.  Output a message halfway through.
   ok $lines[0], MESSAGE1;
   ok $lines[-1], qr/\[=+\]/,            'Count 1-10 (5)';
   ok $lines[-1], qr/^\s*100%/,          'Count 1-10 (6)';
-}
 
 # -------------------------------------
 
@@ -90,19 +91,18 @@ This is to check that message preserves the progress bar value correctly.
 
 =cut
 
-{
+($out, $err) = capture {
   my $p;
-  save_output('stderr', *STDERR{IO});
   ok (evcheck(sub { $p = Term::ProgressBar->new(100); }, 'Message Check ( 1)'),
       1,                                                 'Message Check ( 1)');
   ok (evcheck(sub { for (0..100) { $p->update($_); $p->message("Hello") } },
               'Message Check ( 2)',), 
       1,                                                 'Message Check ( 2)');
-  my $err = restore_output('stderr');
+};
+print $out;
 
   my @err_lines = split /\n/, $err;
   (my $last_line = $err_lines[-1]) =~ tr/\r//d;
   ok substr($last_line, 0, 4), '100%',               'Message Check ( 3)';
-}
 
 # ----------------------------------------------------------------------------

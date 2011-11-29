@@ -13,8 +13,7 @@ use FindBin       qw( $Bin );
 use Test          qw( ok plan );
 
 use lib $Bin;
-use test qw( 
-             evcheck restore_output save_output );
+use test qw( evcheck );
 
 BEGIN {
   # 1 for compilation test,
@@ -54,9 +53,10 @@ Update it it from 1 to 10.
 
 =cut
 
-{
+use Capture::Tiny qw(capture);
+
+my ($out, $err) = capture {
   my $p;
-  save_output('stderr', *STDERR{IO});
   ok (evcheck(sub {
                 $p = Term::ProgressBar->new({count => 10, name => 'fred',
                                              ETA => 'linear'});
@@ -71,8 +71,8 @@ Update it it from 1 to 10.
   ok (evcheck(sub { for (6..10) { $p->update($_); sleep 1 } },
               'Count 1-10 (4)' ),
       1, 'Count 1-10 (4)');
-  my $err = restore_output('stderr');
-#  $err =~ s!^.*\r!!gm;
+};
+print $out;
   my @lines = grep $_ ne '', split /[\n\r]+/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
@@ -81,6 +81,6 @@ Update it it from 1 to 10.
   ok $lines[-1], qr/^fred: \s*100%/,                          'Count 1-10 (7)';
   ok $lines[-1], qr/D[ \d]\dh\d{2}m\d{2}s$/,                  'Count 1-10 (8)';
   ok $lines[-2], qr/ Left$/,                                  'Count 1-10 (9)';
-}
+
 
 # ----------------------------------------------------------------------------

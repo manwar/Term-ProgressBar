@@ -13,7 +13,9 @@ use FindBin      qw( $Bin );
 use Test         qw( ok plan );
 
 use lib $Bin;
-use test qw( evcheck restore_output save_output );
+use test qw( evcheck );
+
+use Capture::Tiny qw(capture);
 
 BEGIN {
   # 1 for compilation test,
@@ -48,15 +50,16 @@ Update it it from 1 to 10.
 (5--15) Check bar has no minor characters at any point
 
 =cut
-
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
+
+my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new(10); }, 'Count 1-10 (1)' ),
       1, 'Count 1-10 (1)');
   ok (evcheck(sub { $p->update($_) for 1..10 }, 'Count 1-10 (2)' ),
       1, 'Count 1-10 (2)');
-  my $err = restore_output('stderr');
+};
+print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
@@ -65,7 +68,6 @@ Update it it from 1 to 10.
   ok $lines[$_], qr/\[[= ]+\]/, sprintf('Count 1-10 (%d)', 5+$_)
     for 0..10;
 }
-
 # -------------------------------------
 
 =head2 Tests 17--30: Count 1-9
@@ -83,12 +85,15 @@ Update it it from 1 to 9.
 
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
+
+my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new(10); }, 'Count 1-9 (1)' ),
       1, 'Count 1-9 (1)');
   ok (evcheck(sub { $p->update($_) for 1..9 }, 'Count 1-9 (2)' ),
       1, 'Count 1-9 (2)');
-  my $err = restore_output('stderr');
+};
+print $out;
+
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
@@ -97,7 +102,6 @@ Update it it from 1 to 9.
   ok $lines[$_], qr/\[[= ]+\]/, sprintf('Count 1-9 (%d)', 5+$_)
     for 0..9;
 }
-
 # -------------------------------------
 
 =head2 Test 31
@@ -108,10 +112,11 @@ percentage or displayed bar).
 
 =cut
 {
-  save_output('stderr', *STDERR{IO});
+my ($out, $err) = capture {
   my $b = Term::ProgressBar->new(1000000);
   $b->update($_) foreach (0, 1);
-  my $err = restore_output('stderr');
+};
+print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};

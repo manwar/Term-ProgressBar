@@ -12,8 +12,10 @@ use Data::Dumper qw( Dumper );
 use FindBin      qw( $Bin );
 use Test         qw( ok plan );
 
+use Capture::Tiny qw(capture);
+
 use lib $Bin;
-use test qw( evcheck restore_output save_output );
+use test qw( evcheck );
 
 BEGIN {
   # 1 for compilation test,
@@ -50,14 +52,16 @@ Update it it from 1 to 10.
 
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
-  my $name = 'doing nothing';
+  my $name;
+my ($out, $err)  = capture {
+  $name = 'doing nothing';
   ok (evcheck(sub { $p = Term::ProgressBar->new($name, 0); },
 	 'V1 mode ( 1)' ),
       1,                                                       'V1 mode ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..10 },'V1 mode ( 2)'),
       1,                                                       'V1 mode ( 2)');
-  my $err = restore_output('stderr');
+};
+print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
@@ -81,15 +85,16 @@ Update it it from 1 to 10.
 
 {
   my $p;
-  save_output('stderr', *STDERR{IO});
   my $name = 'zero';
+my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new({ count => 0,
                                                   name => $name }); },
 	 'V2 mode ( 1)' ),
       1,                                                       'V2 mode ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..10 },'V2 mode ( 2)'),
       1,                                                       'V2 mode ( 2)');
-  my $err = restore_output('stderr');
+};
+print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};

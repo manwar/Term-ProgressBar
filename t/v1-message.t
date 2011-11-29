@@ -13,7 +13,7 @@ use FindBin      qw( $Bin );
 use Test         qw( ok plan );
 
 use lib $Bin;
-use test qw( evcheck restore_output save_output );
+use test qw( evcheck );
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
 
@@ -52,10 +52,10 @@ Update it it from 1 to 10.
 (6) Check bar number is 100%
 
 =cut
+use Capture::Tiny qw(capture);
 
-{
+my ($out, $err) = capture {
   my $p;
-  save_output('stderr', *STDERR{IO});
   ok (evcheck(sub { $p = Term::ProgressBar->new('bob', 10); },
               'Count 1-10 (1)' ),
       1, 'Count 1-10 (1)');
@@ -65,7 +65,8 @@ Update it it from 1 to 10.
       1, 'Count 1-10 (3)');
   ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
       1, 'Count 1-10 (4)');
-  my $err = restore_output('stderr');
+};
+print $out;
 
   $err =~ s!^.*\r!!gm;
   print STDERR "ERR:\n$err\nlength: ", length($err), "\n"
@@ -76,4 +77,3 @@ Update it it from 1 to 10.
   ok $lines[0], MESSAGE1;
   ok $lines[-1], qr/bob:\s+\d+% \#+/,            'Count 1-10 (6)';
   ok $lines[-1], qr/^bob:\s+100%/,               'Count 1-10 (7)';
-}
