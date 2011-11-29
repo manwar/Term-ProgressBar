@@ -626,43 +626,6 @@ is equal.  If the sort flag is present, each file is sorted prior to comparison.
 
 =cut
 
-#XYZ sub _run {
-#XYZ   my ($cmd, $name, $in) = @_;
-#XYZ
-#XYZ   my $infn = defined $in ? tmpnam : '/dev/null';
-#XYZ   my $outfn = tmpnam;
-#XYZ   my $errfn = tmpnam;
-#XYZ
-#XYZ   my $pid = fork;
-#XYZ   croak "Couldn't fork: $!\n"
-#XYZ     unless defined $pid;
-#XYZ
-#XYZ   if ( $pid == 0 ) { # Child
-#XYZ     open STDOUT, '>', $outfn;
-#XYZ     open STDERR, '>', $errfn;
-#XYZ     open STDIN,  '<', $infn;
-#XYZ
-#XYZ     exec @$cmd;
-#XYZ   }
-#XYZ
-#XYZ   my $rv = waitpid $pid, 0;
-#XYZ   my $status = $?;
-#XYZ
-#XYZ   croak "Unexpected waitpid return from child $name: $rv (expected $pid)\n"
-#XYZ     unless $rv == $pid;
-#XYZ
-#XYZ   local $/ = undef;
-#XYZ   local (OUT, ERR);
-#XYZ   open *OUT, '<', $outfn;
-#XYZ   open *ERR, '<', $errfn;
-#XYZ   my $out = <OUT>;
-#XYZ   my $err = <ERR>;
-#XYZ   close *OUT;
-#XYZ   close *ERR;
-#XYZ
-#XYZ   return $status >> 8, $status & 127, $status & 128 , $out, $err
-#XYZ }
-
 # return codes and old-style call semantics left for backwards compatibility
 BEGIN {
   my $savewarn = $SIG{__WARN__};
