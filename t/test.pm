@@ -100,8 +100,7 @@ The following symbols are exported upon request:
 
 =cut
 
-@EXPORT_OK = qw( compare evcheck  
-                 save_output restore_output tempdir tmpnam );
+@EXPORT_OK = qw( evcheck save_output restore_output );
 
 # Utility -----------------------------
 
