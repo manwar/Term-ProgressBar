@@ -86,8 +86,6 @@ The following symbols are exported upon request:
 
 =item evcheck
 
-=item only_files
-
 =item save_output
 
 =item restore_output
@@ -192,69 +190,6 @@ chdir $tmpdn;
 
 # -------------------------------------
 # PACKAGE FUNCTIONS
-# -------------------------------------
-
-=head2 only_files
-
-=over 4
-
-=item ARGUMENTS
-
-=over 4
-
-=item expect
-
-Arrayref of names of files to expect to exist.
-
-=back
-
-=item RETURNS
-
-=over 4
-
-=item ok
-
-1 if exactly expected files exist, false otherwise.
-
-=back
-
-=back
-
-=cut
-
-sub only_files {
-  my ($expect) = @_;
-
-  local *MYDIR;
-  opendir MYDIR, '.';
-  my %files = map { $_ => 1 } readdir MYDIR;
-  closedir MYDIR;
-
-  my $ok = 1;
-
-  for (@$expect, '.', '..') {
-    if ( exists $files{$_} ) {
-      delete $files{$_};
-    } elsif ( ! -e $_ ) { # $_ might be absolute
-      carp "File not found: $_\n"
-        if $ENV{TEST_DEBUG};
-      $ok = 0;
-    }
-  }
-
-  for (keys %files) {
-    carp "Extra file found: $_\n"
-      if $ENV{TEST_DEBUG};
-    $ok = 0;
-  }
-
-  if ( $ok ) {
-    return 1;
-  } else {
-    return;
-  }
-}
-
 # -------------------------------------
 
 =head2 evcheck
