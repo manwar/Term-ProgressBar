@@ -1,0 +1,16 @@
+--- #YAML:1.0
+name: Term-ProgressBar
+version: 2.09
+license: perl
+distribution_type: module
+requires:
+  Class::MethodMaker: 1.02
+  Term::ReadKey: 2.14
+recommends: {}
+build_requires: {}
+conflicts: {}
+provides:
+  Term::ProgressBar:
+    file: lib/Term/ProgressBar.pm
+    version: 2.09
+generated_by: Module::Build version 0.21

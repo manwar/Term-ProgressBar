@@ -1,0 +1,46 @@
+#!/usr/bin/perl -w
+
+use 5.006;
+use strict;
+
+use File::Spec        qw( );
+use Getopt::Long 2.19 qw( GetOptions );
+
+my $DEBUG;
+my $prefix;
+GetOptions ('debug'     => \$DEBUG,
+            'prefix=s'  => \$prefix,
+           )
+  or die "Options parsing failed";
+
+warn "Building with perl: $^X\n";
+
+use constant MOD_REQS =>
+  [
+    { name    => 'Class::MethodMaker',
+      version => '1.02',
+      
+    },
+  
+    { name    => 'Term::ReadKey',
+      version => '2.14',
+      package => 'TermReadKey',
+    },
+  
+  ];
+
+use constant EXEC_REQS => [ ];
+
+
+
+use constant NAME         => 'Term-ProgressBar';
+use constant VERSION_FROM =>
+  File::Spec->catfile(qw( lib Term ProgressBar.pm ));
+use constant AUTHOR       => 'Martyn J. Pearce ';
+use constant ABSTRACT     => 'provide a progress meter on a standard terminal';
+sub          PREFIX       {   $prefix }
+
+use FindBin 1.42 qw( $Bin );
+use lib $Bin;
+use lib '.';
+require 'make-pm';
