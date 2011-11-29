@@ -35,8 +35,9 @@ BEGIN {
 sub grab_output($) {
     die 'usage: grab_stderr(string to eval)' if @_ != 1;
     my $code = shift;
-    require POSIX;
-    my $tmp_o = POSIX::tmpnam(); my $tmp_e = POSIX::tmpnam();
+	use File::Temp qw(tempdir);
+	my $dir = tempdir( CLEANUP => 1 );
+    my $tmp_o = "$dir/out"; my $tmp_e = "$dir/err";
     local (*OLDOUT, *OLDERR);
 
     # Try to get a message to the outside world if we die
