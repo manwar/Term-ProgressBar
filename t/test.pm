@@ -114,14 +114,6 @@ use Test                    1.122 qw( ok skip );
 
 # ----------------------------------------------------------------------------
 
-sub rel2abs {
-  if ( File::Spec->file_name_is_absolute($_[0]) ) {
-    return $_[0];
-  } else {
-    return File::Spec->catdir(cwd, $_[0]);
-  }
-}
-
 # -------------------------------------
 # PACKAGE CONSTANTS
 # -------------------------------------
