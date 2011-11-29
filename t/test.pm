@@ -124,20 +124,8 @@ sub rel2abs {
   if ( File::Spec->file_name_is_absolute($_[0]) ) {
     return $_[0];
   } else {
-    return catdir(cwd, $_[0]);
+    return File::Spec->catdir(cwd, $_[0]);
   }
-}
-
-sub catdir {
-  File::Spec->catdir(@_);
-}
-
-sub catfile {
-  File::Spec->catfile(@_);
-}
-
-sub updir {
-  File::Spec->updir(@_);
 }
 
 sub min {
@@ -156,13 +144,13 @@ sub min {
 # PACKAGE CONSTANTS
 # -------------------------------------
 
-use constant BUILD_SCRIPT_DIR => => catdir $Bin, updir, qw( blib script );
+use constant BUILD_SCRIPT_DIR => => File::Spec->catdir( $Bin, File::Spec->updir, qw( blib script ) );
 
 sub find_exec {
   my ($exec) = @_;
 
   for (split /:/, $PATH) {
-    my $try = catfile $_, $exec;
+    my $try = File::Spec->catfile($_, $exec);
     return rel2abs($try)
       if -x $try;
   }
