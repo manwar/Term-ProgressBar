@@ -88,32 +88,8 @@ The following symbols are exported upon request:
 
 # Utility -----------------------------
 
-use Carp                          qw( carp croak );
-use Cwd                      2.01 qw( cwd );
-use Env                           qw( PATH );
-use Fatal                    1.02 qw( close open seek sysopen unlink );
-use Fcntl                    1.03 qw( :DEFAULT );
-use File::Basename                qw( basename );
-use File::Path             1.0401 qw( mkpath rmtree );
-use File::Spec                0.6 qw( );
-use File::Temp                    qw( tempdir );
-use FindBin                  1.42 qw( $Bin );
-#use POSIX                    1.02 qw( );
-use Test                    1.122 qw( ok skip );
+use Carp                          qw( carp );
 
-# ----------------------------------------------------------------------------
-
-# -------------------------------------
-# PACKAGE CONSTANTS
-# -------------------------------------
-
-use constant BUILD_SCRIPT_DIR => => File::Spec->catdir( $Bin, File::Spec->updir, qw( blib script ) );
-
-# -------------------------------------
-# PACKAGE ACTIONS
-# -------------------------------------
-
-$PATH = join ':', BUILD_SCRIPT_DIR, split /:/, $PATH;
 
 $| = 1;
 
