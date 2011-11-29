@@ -174,18 +174,6 @@ sub min {
   return $min;
 }
 
-sub max {
-  croak "Can't max over 0 args!\n"
-    unless @_;
-  my $max = $_[0];
-  for (@_[1..$#_]) {
-    $max = $_
-      if $_ > $max;
-  }
-
-  return $max;
-}
-
 # -------------------------------------
 # PACKAGE CONSTANTS
 # -------------------------------------
