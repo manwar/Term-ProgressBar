@@ -13,8 +13,7 @@ test - tools for helping in test suites (not including running externalprograms)
 
   BEGIN { unshift @INC, $Bin };
 
-  use test                  qw( DATA_DIR
-                                evcheck runcheck );
+  use test                  qw(   evcheck runcheck );
 
   BEGIN {
     plan tests  => 3,
@@ -87,15 +86,7 @@ The following symbols are exported upon request:
 
 =over 4
 
-=item BIN_DIR
-
-=item DATA_DIR
-
-=item REF_DIR
-
 =item LIB_DIR
-
-=item PERL
 
 =item check_req
 
@@ -121,7 +112,7 @@ The following symbols are exported upon request:
 
 =cut
 
-@EXPORT_OK = qw( BIN_DIR DATA_DIR REF_DIR LIB_DIR PERL
+@EXPORT_OK = qw( LIB_DIR
                  check_req compare evcheck find_exec only_files read_file
                  save_output restore_output tempdir tmpnam );
 
@@ -178,9 +169,6 @@ sub min {
 # PACKAGE CONSTANTS
 # -------------------------------------
 
-use constant BIN_DIR  => catdir $Bin, updir, 'bin';
-use constant DATA_DIR => catdir $Bin, updir, 'data';
-use constant REF_DIR  => catdir $Bin, updir, 'testref';
 use constant LIB_DIR  => catdir $Bin, updir, 'lib';
 
 use constant BUILD_SCRIPT_DIR => => catdir $Bin, updir, qw( blib script );
@@ -195,10 +183,6 @@ sub find_exec {
   }
   return;
 }
-
-use constant PERL     => (basename($^X) eq $^X ? 
-                          find_exec($^X)       :
-                          rel2abs($^X));
 
 # -------------------------------------
 # PACKAGE ACTIONS

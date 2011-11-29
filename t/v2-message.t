@@ -13,8 +13,7 @@ use FindBin 1.42 qw( $Bin );
 use Test 1.122 qw( ok plan );
 
 use lib $Bin;
-use test qw( DATA_DIR
-             evcheck restore_output save_output );
+use test qw( evcheck restore_output save_output );
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
 

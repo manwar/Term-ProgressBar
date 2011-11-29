@@ -13,8 +13,7 @@ use FindBin      qw( $Bin );
 use Test         qw( ok plan );
 
 use lib $Bin;
-use test qw( DATA_DIR
-             evcheck restore_output save_output );
+use test qw( evcheck restore_output save_output );
 
 BEGIN {
   # 1 for compilation test,
