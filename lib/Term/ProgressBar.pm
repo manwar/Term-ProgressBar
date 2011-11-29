@@ -75,6 +75,8 @@ bar for the same width.
     }
   }
 
+see eg/simle_use.pl
+
 Here is a simple example.  The process considers all the numbers between 0 and
 MAX, and updates the progress bar whenever it finds one.  Note that the
 progress bar update will be very erratic.  See below for a smoother example.
@@ -96,6 +98,8 @@ distribution set (it is not installed as part of the module).
 
     $progress->update($_)
   }
+
+See eg/smooth_bar.pl
 
 This example calls update for each value considered.  This will result in a
 much smoother progress update, but more program time is spent updating the bar
