@@ -9,11 +9,8 @@ This package tests the basic functionality of Term::ProgressBar.
 =cut
 
 use Data::Dumper  qw( Dumper );
-use FindBin       qw( $Bin );
 use Test::More tests => 9;
-
-use lib $Bin;
-use test qw( evcheck );
+use Test::Exception;
 
 =head2 Test 1: compilation
 
@@ -49,20 +46,14 @@ use Capture::Tiny qw(capture);
 
 my ($out, $err) = capture {
   my $p;
-  ok (evcheck(sub {
+  lives_ok {
                 $p = Term::ProgressBar->new({count => 10, name => 'fred',
                                              ETA => 'linear'});
-              }, 'Count 1-10 (1)' ),
-      'Count 1-10 (1)');
-  ok (evcheck(sub { for (1..5) { $p->update($_); sleep 1 } },
-              'Count 1-10 (2)' ),
-      'Count 1-10 (2)');
-  ok (evcheck(sub { $p->message('Hello Mum!') },
-              'Count 1-10 (3)' ),
-      'Count 1-10 (3)');
-  ok (evcheck(sub { for (6..10) { $p->update($_); sleep 1 } },
-              'Count 1-10 (4)' ),
-      'Count 1-10 (4)');
+              } 'Count 1-10 (1)';
+  lives_ok { for (1..5) { $p->update($_); sleep 1 } }
+              'Count 1-10 (2)';
+  lives_ok { $p->message('Hello Mum!') }  'Count 1-10 (3)';
+  lives_ok { for (6..10) { $p->update($_); sleep 1 } } 'Count 1-10 (4)';
 };
 print $out;
   my @lines = grep $_ ne '', split /[\n\r]+/, $err;

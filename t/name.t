@@ -9,11 +9,8 @@ This package tests the name functionality of Term::ProgressBar.
 =cut
 
 use Data::Dumper  qw( Dumper );
-use FindBin       qw( $Bin );
 use Test::More tests => 18;
-
-use lib $Bin;
-use test qw( evcheck );
+use Test::Exception;
 
 use constant MESSAGE1 => 'The Gospel of St. Jude';
 use constant NAME1    => 'Algenon';
@@ -55,12 +52,10 @@ use Capture::Tiny qw(capture);
 {
   my $p;
 my ($out, $err) = capture {
-  ok (evcheck(sub {
+  lives_ok {
                 $p = Term::ProgressBar->new({count => 10, name => NAME1});
-              },                                            'Count 1-10 ( 1)'),
-                                                          'Count 1-10 ( 1)');
-  ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
-                                                          'Count 1-10 ( 2)');
+              } 'Count 1-10 ( 1)';
+  lives_ok { $p->update($_) for 1..3  } 'Count 1-10 ( 2)';
 };
 print $out;
 
@@ -81,10 +76,8 @@ print $out;
 
 ($out, $err) = capture {
 
-  ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
-                                                          'Count 1-10 ( 5)');
-  ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
-                                                          'Count 1-10 ( 6)');
+  lives_ok { $p->message(MESSAGE1)    } 'Count 1-10 ( 5)';
+  lives_ok { $p->update($_) for 6..10 } 'Count 1-10 ( 6)';
 };
 print $out;
 
@@ -122,11 +115,8 @@ Use v1 mode
 {
   my $p;
 my ($out, $err) = capture {
-  ok (evcheck(sub { $p = Term::ProgressBar->new(NAME2, 10); }, 
-                                                            'Count 1-10 ( 1)'),
-                                                          'Count 1-10 ( 1)');
-  ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
-                                                          'Count 1-10 ( 2)');
+  lives_ok { $p = Term::ProgressBar->new(NAME2, 10); } 'Count 1-10 ( 1)';
+  lives_ok { $p->update($_) for 1..3  }                'Count 1-10 ( 2)';
 };
 print $out;
 
@@ -146,10 +136,8 @@ print $out;
   ok $ok;
   
 ($out, $err) = capture {
-  ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
-                                                          'Count 1-10 ( 5)');
-  ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
-                                                          'Count 1-10 ( 6)');
+  lives_ok { $p->message(MESSAGE1)    }  'Count 1-10 ( 5)';
+  lives_ok { $p->update($_) for 6..10 }  'Count 1-10 ( 6)';
 };
 print $out;
   $err =~ s!^.*\r!!gm;

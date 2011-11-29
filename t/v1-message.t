@@ -9,11 +9,8 @@ This package tests the basic functionality of Term::ProgressBar.
 =cut
 
 use Data::Dumper qw( Dumper );
-use FindBin      qw( $Bin );
 use Test::More tests => 8;
-
-use lib $Bin;
-use test qw( evcheck );
+use Test::Exception;
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
 
@@ -49,15 +46,10 @@ use Capture::Tiny qw(capture);
 
 my ($out, $err) = capture {
   my $p;
-  ok (evcheck(sub { $p = Term::ProgressBar->new('bob', 10); },
-              'Count 1-10 (1)' ),
-      'Count 1-10 (1)');
-  ok (evcheck(sub { $p->update($_) for 1..5  }, 'Count 1-10 (2)' ),
-      'Count 1-10 (2)');
-  ok (evcheck(sub { $p->message(MESSAGE1)    }, 'Count 1-10 (3)' ),
-      'Count 1-10 (3)');
-  ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
-      'Count 1-10 (4)');
+  lives_ok { $p = Term::ProgressBar->new('bob', 10); } 'Count 1-10 (1)';
+  lives_ok { $p->update($_) for 1..5  } 'Count 1-10 (2)';
+  lives_ok { $p->message(MESSAGE1)    } 'Count 1-10 (3)';
+  lives_ok { $p->update($_) for 6..10 } 'Count 1-10 (4)';
 };
 print $out;
 

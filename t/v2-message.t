@@ -9,11 +9,8 @@ This package tests the basic functionality of Term::ProgressBar.
 =cut
 
 use Data::Dumper 2.101 qw( Dumper );
-use FindBin 1.42 qw( $Bin );
 use Test::More tests => 11;
-
-use lib $Bin;
-use test qw( evcheck );
+use Test::Exception;
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
 
@@ -50,14 +47,10 @@ Update it it from 1 to 10.  Output a message halfway through.
 
 my ($out, $err) = capture {
   my $p;
-  ok (evcheck(sub { $p = Term::ProgressBar->new(10); }, 'Count 1-10 (1)' ),
-      'Count 1-10 (1)');
-  ok (evcheck(sub { $p->update($_) for 1..5  }, 'Count 1-10 (2)' ),
-      'Count 1-10 (2)');
-  ok (evcheck(sub { $p->message(MESSAGE1)    }, 'Count 1-10 (3)' ),
-      'Count 1-10 (3)');
-  ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
-      'Count 1-10 (4)');
+  lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-10 (1)';
+  lives_ok { $p->update($_) for 1..5  }         'Count 1-10 (2)';
+  lives_ok { $p->message(MESSAGE1)    }         'Count 1-10 (3)';
+  lives_ok { $p->update($_) for 6..10 }         'Count 1-10 (4)';
 };
 print $out;
 
@@ -86,11 +79,8 @@ This is to check that message preserves the progress bar value correctly.
 
 ($out, $err) = capture {
   my $p;
-  ok (evcheck(sub { $p = Term::ProgressBar->new(100); }, 'Message Check ( 1)'),
-                                                      'Message Check ( 1)');
-  ok (evcheck(sub { for (0..100) { $p->update($_); $p->message("Hello") } },
-              'Message Check ( 2)',), 
-                                                      'Message Check ( 2)');
+  lives_ok { $p = Term::ProgressBar->new(100); } 'Message Check ( 1)';
+  lives_ok { for (0..100) { $p->update($_); $p->message("Hello") } }  'Message Check ( 2)';
 };
 print $out;
 
