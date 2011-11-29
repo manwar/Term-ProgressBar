@@ -10,7 +10,7 @@ This package tests the name functionality of Term::ProgressBar.
 
 use Data::Dumper  qw( Dumper );
 use FindBin       qw( $Bin );
-use Test          qw( ok plan );
+use Test::More tests => 18;
 
 use lib $Bin;
 use test qw( evcheck );
@@ -19,11 +19,6 @@ use constant MESSAGE1 => 'The Gospel of St. Jude';
 use constant NAME1    => 'Algenon';
 use constant NAME2    => 'Smegma';
 
-BEGIN {
-  # 1 for compilation test,
-  plan tests  => 18,
-       todo   => [],
-}
 
 =head2 Test 1: compilation
 
@@ -32,9 +27,7 @@ successfully.
 
 =cut
 
-use Term::ProgressBar;
-
-ok 1, 1, 'compilation';
+use_ok 'Term::ProgressBar';
 
 Term::ProgressBar->__force_term (50);
 
@@ -65,9 +58,9 @@ my ($out, $err) = capture {
   ok (evcheck(sub {
                 $p = Term::ProgressBar->new({count => 10, name => NAME1});
               },                                            'Count 1-10 ( 1)'),
-      1,                                                    'Count 1-10 ( 1)');
+                                                          'Count 1-10 ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
-      1,                                                    'Count 1-10 ( 2)');
+                                                          'Count 1-10 ( 2)');
 };
 print $out;
 
@@ -76,7 +69,7 @@ print $out;
     if $ENV{TEST_DEBUG};
   my @lines = split /\n/, $err;
 
-  ok $lines[-1], qr/^@{[NAME1()]}: \s*\b30%/,                'Count 1-10 ( 3)';
+  like $lines[-1], qr/^@{[NAME1()]}: \s*\b30%/,                'Count 1-10 ( 3)';
   my ($bar, $space) = $lines[-1] =~ /\[(=*)(\s*)\]/;
   my $length = length($bar) + length($space);
   print STDERR
@@ -89,9 +82,9 @@ print $out;
 ($out, $err) = capture {
 
   ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
-      1,                                                    'Count 1-10 ( 5)');
+                                                          'Count 1-10 ( 5)');
   ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
-      1,                                                    'Count 1-10 ( 6)');
+                                                          'Count 1-10 ( 6)');
 };
 print $out;
 
@@ -101,9 +94,9 @@ print $out;
 
   @lines = split /\n/, $err;
 
-  ok $lines[0], MESSAGE1,                                    'Count 1-10 ( 7)';
-  ok $lines[-1], qr/\[=+\]/,                                 'Count 1-10 ( 8)';
-  ok $lines[-1], qr/^@{[NAME1()]}: \s*100%/,                 'Count 1-10 ( 9)';
+  is $lines[0], MESSAGE1,                                    'Count 1-10 ( 7)';
+  like $lines[-1], qr/\[=+\]/,                                 'Count 1-10 ( 8)';
+  like $lines[-1], qr/^@{[NAME1()]}: \s*100%/,                 'Count 1-10 ( 9)';
 }
 
 # -------------------------------------
@@ -131,9 +124,9 @@ Use v1 mode
 my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new(NAME2, 10); }, 
                                                             'Count 1-10 ( 1)'),
-      1,                                                    'Count 1-10 ( 1)');
+                                                          'Count 1-10 ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..3  },             'Count 1-10 ( 2)'),
-      1,                                                    'Count 1-10 ( 2)');
+                                                          'Count 1-10 ( 2)');
 };
 print $out;
 
@@ -142,7 +135,7 @@ print $out;
     if $ENV{TEST_DEBUG};
   my @lines = split /\n/, $err;
 
-  ok $lines[-1], qr/^@{[NAME2()]}: \s*\b30%/,                'Count 1-10 ( 3)';
+  like $lines[-1], qr/^@{[NAME2()]}: \s*\b30%/,                'Count 1-10 ( 3)';
   my ($bar, $space) = $lines[-1] =~ /(\#*)(\s*)/;
   my $length = length($bar) + length($space);
   print STDERR
@@ -154,9 +147,9 @@ print $out;
   
 ($out, $err) = capture {
   ok (evcheck(sub { $p->message(MESSAGE1)    },             'Count 1-10 ( 5)'),
-      1,                                                    'Count 1-10 ( 5)');
+                                                          'Count 1-10 ( 5)');
   ok (evcheck(sub { $p->update($_) for 6..10 },             'Count 1-10 ( 6)'),
-      1,                                                    'Count 1-10 ( 6)');
+                                                          'Count 1-10 ( 6)');
 };
 print $out;
   $err =~ s!^.*\r!!gm;
@@ -165,8 +158,8 @@ print $out;
 
   @lines = split /\n/, $err;
 
-  ok $lines[-1], qr/^@{[NAME2()]}: \s*\d+% \#*$/,            'Count 1-10 ( 8)';
-  ok $lines[-1], qr/^@{[NAME2()]}: \s*100%/,                 'Count 1-10 ( 9)';
+  like $lines[-1], qr/^@{[NAME2()]}: \s*\d+% \#*$/,            'Count 1-10 ( 8)';
+  like $lines[-1], qr/^@{[NAME2()]}: \s*100%/,                 'Count 1-10 ( 9)';
 }
 
 # -------------------------------------

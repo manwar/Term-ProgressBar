@@ -8,19 +8,6 @@ test - tools for helping in test suites (not including running externalprograms)
 
 =head1 SYNOPSIS
 
-  use FindBin               1.42 qw( $Bin );
-  use Test                  1.13 qw( ok plan );
-
-  BEGIN { unshift @INC, $Bin };
-
-  use test                  qw(   evcheck runcheck );
-
-  BEGIN {
-    plan tests  => 3,
-         todo   => [],
-         ;
-  }
-
   ok evcheck(sub {
                open my $fh, '>', 'foo';
                print $fh "$_\n"

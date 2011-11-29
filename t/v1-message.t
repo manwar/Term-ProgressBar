@@ -10,18 +10,12 @@ This package tests the basic functionality of Term::ProgressBar.
 
 use Data::Dumper qw( Dumper );
 use FindBin      qw( $Bin );
-use Test         qw( ok plan );
+use Test::More tests => 8;
 
 use lib $Bin;
 use test qw( evcheck );
 
 use constant MESSAGE1 => 'Walking on the Milky Way';
-
-BEGIN {
-  # 1 for compilation test,
-  plan tests  => 8,
-       todo   => [],
-}
 
 =head2 Test 1: compilation
 
@@ -30,9 +24,8 @@ successfully.
 
 =cut
 
-use Term::ProgressBar;
+use_ok 'Term::ProgressBar';
 
-ok 1, 1, 'compilation';
 
 Term::ProgressBar->__force_term (50);
 
@@ -58,13 +51,13 @@ my ($out, $err) = capture {
   my $p;
   ok (evcheck(sub { $p = Term::ProgressBar->new('bob', 10); },
               'Count 1-10 (1)' ),
-      1, 'Count 1-10 (1)');
+      'Count 1-10 (1)');
   ok (evcheck(sub { $p->update($_) for 1..5  }, 'Count 1-10 (2)' ),
-      1, 'Count 1-10 (2)');
+      'Count 1-10 (2)');
   ok (evcheck(sub { $p->message(MESSAGE1)    }, 'Count 1-10 (3)' ),
-      1, 'Count 1-10 (3)');
+      'Count 1-10 (3)');
   ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
-      1, 'Count 1-10 (4)');
+      'Count 1-10 (4)');
 };
 print $out;
 
@@ -74,6 +67,6 @@ print $out;
 
   my @lines = split /\n/, $err;
 
-  ok $lines[0], MESSAGE1;
-  ok $lines[-1], qr/bob:\s+\d+% \#+/,            'Count 1-10 (6)';
-  ok $lines[-1], qr/^bob:\s+100%/,               'Count 1-10 (7)';
+  is $lines[0], MESSAGE1;
+  like $lines[-1], qr/bob:\s+\d+% \#+/,            'Count 1-10 (6)';
+  like $lines[-1], qr/^bob:\s+100%/,               'Count 1-10 (7)';

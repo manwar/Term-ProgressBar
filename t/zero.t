@@ -10,29 +10,14 @@ This package tests the zero-progress handling of progress bar.
 
 use Data::Dumper qw( Dumper );
 use FindBin      qw( $Bin );
-use Test         qw( ok plan );
+use Test::More tests => 9;
 
 use Capture::Tiny qw(capture);
 
 use lib $Bin;
 use test qw( evcheck );
 
-BEGIN {
-  # 1 for compilation test,
-  plan tests  => 9,
-       todo   => [],
-}
-
-=head2 Test 1: compilation
-
-This test confirms that the test script and the modules it calls compiled
-successfully.
-
-=cut
-
-use Term::ProgressBar;
-
-ok 1, 1, 'compilation';
+use_ok 'Term::ProgressBar';
 
 Term::ProgressBar->__force_term (50);
 
@@ -57,16 +42,16 @@ my ($out, $err)  = capture {
   $name = 'doing nothing';
   ok (evcheck(sub { $p = Term::ProgressBar->new($name, 0); },
 	 'V1 mode ( 1)' ),
-      1,                                                       'V1 mode ( 1)');
+                                                             'V1 mode ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..10 },'V1 mode ( 2)'),
-      1,                                                       'V1 mode ( 2)');
+                                                             'V1 mode ( 2)');
 };
 print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
-  ok $lines[-1], qr/^$name:/,                                  'V1 mode ( 3)';
-  ok $lines[-1], qr/\(nothing to do\)/,                        'V1 mode ( 4)';
+  like $lines[-1], qr/^$name:/,                                  'V1 mode ( 3)';
+  like $lines[-1], qr/\(nothing to do\)/,                        'V1 mode ( 4)';
 }
 
 # -------------------------------------
@@ -90,16 +75,16 @@ my ($out, $err) = capture {
   ok (evcheck(sub { $p = Term::ProgressBar->new({ count => 0,
                                                   name => $name }); },
 	 'V2 mode ( 1)' ),
-      1,                                                       'V2 mode ( 1)');
+                                                            'V2 mode ( 1)');
   ok (evcheck(sub { $p->update($_) for 1..10 },'V2 mode ( 2)'),
-      1,                                                       'V2 mode ( 2)');
+                                                            'V2 mode ( 2)');
 };
 print $out;
   my @lines = grep $_ ne '', split /\r/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
-  ok $lines[-1], qr/^$name:/,                                  'V2 mode ( 3)';
-  ok $lines[-1], qr/\(nothing to do\)/,                        'V2 mode ( 4)';
+  like $lines[-1], qr/^$name:/,                                  'V2 mode ( 3)';
+  like $lines[-1], qr/\(nothing to do\)/,                        'V2 mode ( 4)';
 }
 
 # ----------------------------------------------------------------------------

@@ -12,15 +12,7 @@ and is intended to test compatibility with that version.
 # Utility -----------------------------
 
 use Data::Dumper qw( );
-use Test qw( ok plan );
-
-# Test Setup --------------------------
-
-BEGIN {
-  plan tests => 5,
-       todo  => [],
-       ;
-}
+use Test::More tests => 4;
 
 # -------------------------------------
 
@@ -68,22 +60,8 @@ sub grab_output($) {
     return [ $o, $e ];
 }
 
-# Change 1..1 below to 1..last_test_to_print .
-# (It may become useful if the test is moved to ./t subdirectory.)
-
 use Term::ProgressBar;
 use POSIX qw<floor ceil>;
-
-=head2 Test 1: compilation
-
-This test confirms that the test script and the modules it calls compiled
-successfully.
-
-=cut
-
-ok 1, 1, 'compilation';
-
-# -------------------------------------
 
 $| = 1;
 
@@ -99,7 +77,7 @@ if (not $b or $o->[0] ne '' or $o->[1] ne "$test_str: ") {
       if $ENV{TEST_DEBUG};
     print 'not ';
 }
-print "ok 2\n";
+ok 1;
 
 # Test 3: do half the stuff and check half the bar has printed
 my $halfway = floor($count / 2);
@@ -111,7 +89,7 @@ if ($o->[0] ne ''
       if $ENV{TEST_DEBUG};
     print 'not ';
 }
-print "ok 3\n";
+ok 1;
 
 # Test 4: do the rest of the stuff and check the whole bar has printed
 $o = grab_output("update \$b foreach ($halfway .. $count - 1)");
@@ -122,7 +100,7 @@ if ($o->[0] ne ''
       if $ENV{TEST_DEBUG};
     print 'not ';
 }
-print "ok 4\n";
+ok 1;
 
 # Test 5: try to do another item and check there is an error
 eval { update $b };
@@ -134,4 +112,4 @@ unless ( defined($@)
     if $ENV{TEST_DEBUG};
   print 'not ';
 }
-print "ok 5\n";
+ok 1;

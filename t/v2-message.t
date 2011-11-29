@@ -10,7 +10,7 @@ This package tests the basic functionality of Term::ProgressBar.
 
 use Data::Dumper 2.101 qw( Dumper );
 use FindBin 1.42 qw( $Bin );
-use Test 1.122 qw( ok plan );
+use Test::More tests => 11;
 
 use lib $Bin;
 use test qw( evcheck );
@@ -19,11 +19,6 @@ use constant MESSAGE1 => 'Walking on the Milky Way';
 
 use Capture::Tiny qw(capture);
 
-BEGIN {
-  # 1 for compilation test,
-  plan tests  => 11,
-       todo   => [],
-}
 
 =head2 Test 1: compilation
 
@@ -32,9 +27,7 @@ successfully.
 
 =cut
 
-use Term::ProgressBar;
-
-ok 1, 1, 'compilation';
+use_ok 'Term::ProgressBar';
 
 Term::ProgressBar->__force_term (50);
 
@@ -58,13 +51,13 @@ Update it it from 1 to 10.  Output a message halfway through.
 my ($out, $err) = capture {
   my $p;
   ok (evcheck(sub { $p = Term::ProgressBar->new(10); }, 'Count 1-10 (1)' ),
-      1, 'Count 1-10 (1)');
+      'Count 1-10 (1)');
   ok (evcheck(sub { $p->update($_) for 1..5  }, 'Count 1-10 (2)' ),
-      1, 'Count 1-10 (2)');
+      'Count 1-10 (2)');
   ok (evcheck(sub { $p->message(MESSAGE1)    }, 'Count 1-10 (3)' ),
-      1, 'Count 1-10 (3)');
+      'Count 1-10 (3)');
   ok (evcheck(sub { $p->update($_) for 6..10 }, 'Count 1-10 (4)' ),
-      1, 'Count 1-10 (4)');
+      'Count 1-10 (4)');
 };
 print $out;
 
@@ -74,9 +67,9 @@ print $out;
 
   my @lines = split /\n/, $err;
 
-  ok $lines[0], MESSAGE1;
-  ok $lines[-1], qr/\[=+\]/,            'Count 1-10 (5)';
-  ok $lines[-1], qr/^\s*100%/,          'Count 1-10 (6)';
+  is $lines[0], MESSAGE1;
+  like $lines[-1], qr/\[=+\]/,            'Count 1-10 (5)';
+  like $lines[-1], qr/^\s*100%/,          'Count 1-10 (6)';
 
 # -------------------------------------
 
@@ -94,15 +87,15 @@ This is to check that message preserves the progress bar value correctly.
 ($out, $err) = capture {
   my $p;
   ok (evcheck(sub { $p = Term::ProgressBar->new(100); }, 'Message Check ( 1)'),
-      1,                                                 'Message Check ( 1)');
+                                                      'Message Check ( 1)');
   ok (evcheck(sub { for (0..100) { $p->update($_); $p->message("Hello") } },
               'Message Check ( 2)',), 
-      1,                                                 'Message Check ( 2)');
+                                                      'Message Check ( 2)');
 };
 print $out;
 
   my @err_lines = split /\n/, $err;
   (my $last_line = $err_lines[-1]) =~ tr/\r//d;
-  ok substr($last_line, 0, 4), '100%',               'Message Check ( 3)';
+  is substr($last_line, 0, 4), '100%',               'Message Check ( 3)';
 
 # ----------------------------------------------------------------------------

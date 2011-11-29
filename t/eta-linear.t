@@ -10,16 +10,10 @@ This package tests the basic functionality of Term::ProgressBar.
 
 use Data::Dumper  qw( Dumper );
 use FindBin       qw( $Bin );
-use Test          qw( ok plan );
+use Test::More tests => 9;
 
 use lib $Bin;
 use test qw( evcheck );
-
-BEGIN {
-  # 1 for compilation test,
-  plan tests  => 10,
-       todo   => [],
-}
 
 =head2 Test 1: compilation
 
@@ -29,8 +23,6 @@ successfully.
 =cut
 
 use Term::ProgressBar;
-
-ok 1, 1, 'compilation';
 
 Term::ProgressBar->__force_term (50);
 
@@ -61,26 +53,26 @@ my ($out, $err) = capture {
                 $p = Term::ProgressBar->new({count => 10, name => 'fred',
                                              ETA => 'linear'});
               }, 'Count 1-10 (1)' ),
-      1, 'Count 1-10 (1)');
+      'Count 1-10 (1)');
   ok (evcheck(sub { for (1..5) { $p->update($_); sleep 1 } },
               'Count 1-10 (2)' ),
-      1, 'Count 1-10 (2)');
+      'Count 1-10 (2)');
   ok (evcheck(sub { $p->message('Hello Mum!') },
               'Count 1-10 (3)' ),
-      1, 'Count 1-10 (3)');
+      'Count 1-10 (3)');
   ok (evcheck(sub { for (6..10) { $p->update($_); sleep 1 } },
               'Count 1-10 (4)' ),
-      1, 'Count 1-10 (4)');
+      'Count 1-10 (4)');
 };
 print $out;
   my @lines = grep $_ ne '', split /[\n\r]+/, $err;
   print Dumper \@lines
     if $ENV{TEST_DEBUG};
   ok grep $_ eq 'Hello Mum!', @lines;
-  ok $lines[-1], qr/\[=+\]/,                                  'Count 1-10 (6)';
-  ok $lines[-1], qr/^fred: \s*100%/,                          'Count 1-10 (7)';
-  ok $lines[-1], qr/D[ \d]\dh\d{2}m\d{2}s$/,                  'Count 1-10 (8)';
-  ok $lines[-2], qr/ Left$/,                                  'Count 1-10 (9)';
+  like $lines[-1], qr/\[=+\]/,                                  'Count 1-10 (6)';
+  like $lines[-1], qr/^fred: \s*100%/,                          'Count 1-10 (7)';
+  like $lines[-1], qr/D[ \d]\dh\d{2}m\d{2}s$/,                  'Count 1-10 (8)';
+  like $lines[-2], qr/ Left$/,                                  'Count 1-10 (9)';
 
 
 # ----------------------------------------------------------------------------
