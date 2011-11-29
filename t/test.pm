@@ -100,13 +100,11 @@ The following symbols are exported upon request:
 
 =item find_exec
 
-=item read_file
-
 =back
 
 =cut
 
-@EXPORT_OK = qw( check_req compare evcheck find_exec only_files read_file
+@EXPORT_OK = qw( check_req compare evcheck only_files 
                  save_output restore_output tempdir tmpnam );
 
 # Utility -----------------------------
@@ -1060,56 +1058,6 @@ nothing, if no such file exists.
 =cut
 
 # defined further up to use in constants
-
-# -------------------------------------
-
-=head2 read_file
-
-=over 4
-
-=item ARGUMENTS
-
-=over 4
-
-=item filename
-
-B<Mandatory>
-
-=item line-terminator
-
-B<Optional>.  Value of C<$/>.  Defaults to C<"\n">.
-
-=back
-
-=item RETURNS
-
-=over 4
-
-=item lines
-
-A list of lines in the file (lines determined by the value of
-line-terminator), as an arrayref.
-
-=back
-
-=back
-
-=cut
-
-sub read_file {
-  my ($fn, $term) = @_;
-
-  $term = "\n"
-    unless defined $term;
-
-  my $fh = do { local *F; *F };
-  sysopen $fh, $fn, O_RDONLY;
-  local $/ = $term;
-  my @lines = <$fh>;
-  close $fh;
-
-  return \@lines;
-}
 
 # ----------------------------------------------------------------------------
 
