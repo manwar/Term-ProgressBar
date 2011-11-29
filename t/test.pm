@@ -82,8 +82,6 @@ The following symbols are exported upon request:
 
 =over 4
 
-=item check_req
-
 =item compare
 
 =item evcheck
@@ -104,7 +102,7 @@ The following symbols are exported upon request:
 
 =cut
 
-@EXPORT_OK = qw( check_req compare evcheck only_files 
+@EXPORT_OK = qw( compare evcheck  
                  save_output restore_output tempdir tmpnam );
 
 # Utility -----------------------------
@@ -873,120 +871,6 @@ END
       unless $notest;
     return 0;
   }
-}
-
-# -------------------------------------
-
-=head2 check_req
-
-Perform a requisite check on a given executable.  This will skip if the
-required modules are not present.
-
-4+(n+m)*2 tests are performed, where n is the number of prerequisites
-expected, and m is the number of outputs expected.
-
-=over 4
-
-=item SYNOPSIS
-
-  check_req('ccu-touch',
-            ['/etc/passwd'],
-            [[REQ_FILE, '/etc/passwd']],
-            [[REQ_FILE, 'passwd.foo']],
-            'requisites 1');
-
-
-=item ARGUMENTS
-
-=over 4
-
-=item cmd_name
-
-The name of the command to run.  It is assumed that this command is in
-blib/script; hence it should be an executable in this package, and C<make>
-shuold have been run recently.
-
-=item args
-
-The arguments to pass to the cmd_name, as an arrayref.
-
-=item epres
-
-The expected prerequisites, as an arrayref, wherein every member is a
-two-element arrayref, the members being the requisite type, and the requisite
-value.
-
-=item eouts
-
-The expected outputs, in the same format as the L<epres|"epres">.
-
-=item testname
-
-The name to use in error messages.
-
-=back
-
-=back
-
-=cut
-
-sub check_req {
-  my ($cmd_name, $args, $epres, $eouts, $testname) = @_;
-
-  eval "use Pipeline::DataFlow 1.03 qw( :req_types );";
-  my $skip;
-  if ( $@ ) {
-    print STDERR "$@\n"
-      if $ENV{TEST_DEBUG};
-    $skip = 'Skipped: Pipeline::DataFlow 1.03 not found';
-  } else {
-    $skip = 0;
-  }
-
-  my $count = 1;
-  my $test = sub {
-    my ($code, $expect) = @_;
-    my $name = sprintf "%s (%2d)", $testname, $count++;
-    my $value = UNIVERSAL::isa($code, 'CODE') ? $code->($name) : $code;
-    skip $skip, $value, $expect, $name;
-  };
-
-  # Initialize nicely to cope when read_reqs fails
-  my ($pres, $outs) = ([], []);
-
-  $test->(sub {
-            evcheck(sub {
-                      ($pres, $outs) = Pipeline::DataFlow->read_reqs
-                        ([catfile($Bin, updir, 'blib', 'script', $cmd_name),
-                          @$args]);
-                    }, $_[0]),},
-          1);
-
-  $test->(scalar @$pres, scalar @$epres);
-
-  my (@epres, @pres);
-  @epres = sort { $a->[1] cmp $b->[1] } @$epres;
-  @pres =  sort { $a->[1] cmp $b->[1] } @$pres;
-
-  for (my $i = 0; $i < @epres; $i++) {
-    my ($type, $value) = @{$epres[$i]};
-    $test->($type,  @pres > $i ? $pres[$i]->[0] : undef);
-    $test->($value, @pres > $i ? $pres[$i]->[1] : undef);
-  }
-
-  $test->(scalar @$outs, scalar @$eouts);
-
-  my (@eouts, @outs);
-  @eouts = sort { $a->[1] cmp $b->[1] } @$eouts;
-  @outs =  sort { $a->[1] cmp $b->[1] } @$outs;
-
-  for (my $i = 0; $i < @eouts; $i++) {
-    my ($type, $value) = @{$eouts[$i]};
-    $test->($type,  @outs > $i ? $outs[$i]->[0] : undef);
-    $test->($value, @outs > $i ? $outs[$i]->[1] : undef);
-  }
-
-  $test->(only_files([]), 1);
 }
 
 # -------------------------------------
