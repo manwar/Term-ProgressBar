@@ -92,8 +92,6 @@ The following symbols are exported upon request:
 
 =item tempdir
 
-=item find_exec
-
 =back
 
 =cut
@@ -108,7 +106,6 @@ use Env                           qw( PATH );
 use Fatal                    1.02 qw( close open seek sysopen unlink );
 use Fcntl                    1.03 qw( :DEFAULT );
 use File::Basename                qw( basename );
-use File::Compare          1.1002 qw( );
 use File::Path             1.0401 qw( mkpath rmtree );
 use File::Spec                0.6 qw( );
 use FindBin                  1.42 qw( $Bin );
@@ -125,34 +122,11 @@ sub rel2abs {
   }
 }
 
-sub min {
-  croak "Can't min over 0 args!\n"
-    unless @_;
-  my $min = $_[0];
-  for (@_[1..$#_]) {
-    $min = $_
-      if $_ < $min;
-  }
-
-  return $min;
-}
-
 # -------------------------------------
 # PACKAGE CONSTANTS
 # -------------------------------------
 
 use constant BUILD_SCRIPT_DIR => => File::Spec->catdir( $Bin, File::Spec->updir, qw( blib script ) );
-
-sub find_exec {
-  my ($exec) = @_;
-
-  for (split /:/, $PATH) {
-    my $try = File::Spec->catfile($_, $exec);
-    return rel2abs($try)
-      if -x $try;
-  }
-  return;
-}
 
 # -------------------------------------
 # PACKAGE ACTIONS
@@ -486,36 +460,6 @@ END {
   }
 }
 
-# -------------------------------------
-
-=head2 find_exec
-
-=over 4
-
-=item ARGUMENTS
-
-=over 4
-
-=item proggie
-
-The name of the program
-
-=back
-
-=item RETURNS
-
-=over 4
-
-=item path
-
-The path to the first executable file with the given name on C<$PATH>.  Or
-nothing, if no such file exists.
-
-=back
-
-=back
-
-=cut
 
 # defined further up to use in constants
 
