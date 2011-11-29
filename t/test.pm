@@ -295,14 +295,6 @@ sub restore_output {
   return $string;
 }
 
-sub _test_save_restore_output {
-  warn "to stderr 1\n";
-  save_output("stderr", *STDERR{IO});
-  warn "Hello, Mum!";
-  print 'SAVED:->:', restore_output("stderr"), ":<-\n";
-  warn "to stderr 2\n";
-}
-
 # -------------------------------------
 
 =head2 tmpnam
