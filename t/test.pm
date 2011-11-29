@@ -47,10 +47,6 @@ Setting up the environment includes:
 
 =item Prepending F<blib/script> onto the path
 
-=item Pushing the module F<lib/> dir onto the @PERL5LIB var
-
-For executed scripts.
-
 =item Pushing the module F<lib/> dir onto the @INC var
 
 For internal C<use> calls.
@@ -86,8 +82,6 @@ The following symbols are exported upon request:
 
 =over 4
 
-=item LIB_DIR
-
 =item check_req
 
 =item compare
@@ -112,15 +106,14 @@ The following symbols are exported upon request:
 
 =cut
 
-@EXPORT_OK = qw( LIB_DIR
-                 check_req compare evcheck find_exec only_files read_file
+@EXPORT_OK = qw( check_req compare evcheck find_exec only_files read_file
                  save_output restore_output tempdir tmpnam );
 
 # Utility -----------------------------
 
 use Carp                          qw( carp croak );
 use Cwd                      2.01 qw( cwd );
-use Env                           qw( PATH PERL5LIB );
+use Env                           qw( PATH );
 use Fatal                    1.02 qw( close open seek sysopen unlink );
 use Fcntl                    1.03 qw( :DEFAULT );
 use File::Basename                qw( basename );
@@ -169,8 +162,6 @@ sub min {
 # PACKAGE CONSTANTS
 # -------------------------------------
 
-use constant LIB_DIR  => catdir $Bin, updir, 'lib';
-
 use constant BUILD_SCRIPT_DIR => => catdir $Bin, updir, qw( blib script );
 
 sub find_exec {
@@ -187,11 +178,6 @@ sub find_exec {
 # -------------------------------------
 # PACKAGE ACTIONS
 # -------------------------------------
-
-# @PERL5LIB not available in Env for perl 5.00503
-# unshift @PERL5LIB, LIB_DIR;
-$PERL5LIB = defined $PERL5LIB ? join(':', LIB_DIR, $PERL5LIB) : LIB_DIR;
-unshift @INC,      LIB_DIR;
 
 $PATH = join ':', BUILD_SCRIPT_DIR, split /:/, $PATH;
 
