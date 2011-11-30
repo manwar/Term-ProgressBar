@@ -11,6 +11,12 @@ WriteMakefile (
   PREREQ_PM    => +{ 
                      'Class::MethodMaker' => '1.02',
                      'Term::ReadKey' => '2.14',},
+  BUILD_REQUIRES => {
+                     'Capture::Tiny' => '0.11',
+                     'Test::More'    => '0.80',
+                     'Test::Exception' => '0.31',
+                     'File::Temp'    => 0,
+  },
   EXE_FILES    => [qw(  )],
   # Need this to stop Makefile treating Build.PL as a producer of Build as a
   # target for 'all'.
