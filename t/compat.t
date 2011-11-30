@@ -29,39 +29,29 @@ my $test_str = 'test';
 my $tp;
 {
   my ($out, $err) = capture { $tp = Term::ProgressBar->new($test_str, $count); };
-  ok $tp;
-  is $out, '';
+  isa_ok $tp, 'Term::ProgressBar';
+  is $out, '', 'empty stdout';
   is $err, "$test_str: ";
 }
-
-#    print Data::Dumper->Dump([$b, $out, $err], [qw( b o e)])
-#      if $ENV{TEST_DEBUG};
 
 diag 'do half the stuff and check half the bar has printed';
 my $halfway = floor($count / 2);
 {
-  my ($out, $err) = capture { update $tp foreach (0 .. $halfway - 1) };
-  is $out, '';
+  my ($out, $err) = capture { $tp->update foreach (0 .. $halfway - 1) };
+  is $out, '', 'empty stdout';
   is $err, ('#' x floor(50 / 2));
-  
-#    print Data::Dumper->Dump([$o], [qw( o )])
-#      if $ENV{TEST_DEBUG};
 }
 
 # do the rest of the stuff and check the whole bar has printed
 {
-   my ($out, $err) = capture { update $tp foreach ($halfway .. $count - 1) };
-   is $out, '';
+   my ($out, $err) = capture { $tp->update foreach ($halfway .. $count - 1) };
+   is $out, '', 'empty stdout';
    is $err, ('#' x ceil(50 / 2)) . "\n";
-#    print Data::Dumper->Dump([$o], [qw( o )])
-#      if $ENV{TEST_DEBUG};
-
 }
 
 # try to do another item and check there is an error
-eval { update $tp };
-ok defined($@);
-is substr($@, 0, length(Term::ProgressBar::ALREADY_FINISHED)),
+eval { $tp->update };
+my $err = $@;
+ok defined($err);
+is substr($err, 0, length(Term::ProgressBar::ALREADY_FINISHED)),
           Term::ProgressBar::ALREADY_FINISHED;
-#  print Data::Dumper->Dump([$@], [qw( @ )])
-#    if $ENV{TEST_DEBUG};
