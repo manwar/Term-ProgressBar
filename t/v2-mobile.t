@@ -1,6 +1,7 @@
 # (X)Emacs mode: -*- cperl -*-
 
 use strict;
+use warnings;
 
 =head1 Unit Test Package for Term::ProgressBar
 
@@ -8,7 +9,6 @@ This package tests the moving target functionality of Term::ProgressBar.
 
 =cut
 
-use Data::Dumper qw( Dumper );
 use Test::More tests => 7;
 use Test::Exception;
 
@@ -45,11 +45,11 @@ my ($out, $err) = capture {
 };
 print $out;
 
-  $err =~ s!^.*\r!!gm;
-  print STDERR "ERR:\n$err\nlength: ", length($err), "\n"
+$err =~ s!^.*\r!!gm;
+diag "ERR:\n$err\nlength: " . length($err)
     if $ENV{TEST_DEBUG};
 
-  my @lines = split /\n/, $err;
+my @lines = split /\n/, $err;
 
-  like $lines[-1], qr/\[=+\]/,            'Count 1-20 (5)';
-  like $lines[-1], qr/^\s*100%/,          'Count 1-20 (6)';
+like $lines[-1], qr/\[=+\]/,            'Count 1-20 (5)';
+like $lines[-1], qr/^\s*100%/,          'Count 1-20 (6)';

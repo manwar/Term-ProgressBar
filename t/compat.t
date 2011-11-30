@@ -12,7 +12,6 @@ and is intended to test compatibility with that version.
 
 # Utility -----------------------------
 
-use Data::Dumper qw( );
 use Test::More tests => 9;
 
 use Term::ProgressBar;

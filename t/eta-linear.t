@@ -1,6 +1,7 @@
 # (X)Emacs mode: -*- cperl -*-
 
 use strict;
+use warnings;
 
 =head1 Unit Test Package for Term::ProgressBar
 
@@ -8,16 +9,10 @@ This package tests the basic functionality of Term::ProgressBar.
 
 =cut
 
-use Data::Dumper  qw( Dumper );
 use Test::More tests => 9;
 use Test::Exception;
 
-=head2 Test 1: compilation
-
-This test confirms that the test script and the modules it calls compiled
-successfully.
-
-=cut
+use Capture::Tiny qw(capture);
 
 use Term::ProgressBar;
 
@@ -42,28 +37,28 @@ Update it it from 1 to 10.
 
 =cut
 
-use Capture::Tiny qw(capture);
-
-my ($out, $err) = capture {
-  my $p;
-  lives_ok {
+{
+  my ($out, $err) = capture {
+    my $p;
+    lives_ok {
                 $p = Term::ProgressBar->new({count => 10, name => 'fred',
                                              ETA => 'linear'});
               } 'Count 1-10 (1)';
-  lives_ok { for (1..5) { $p->update($_); sleep 1 } }
+    lives_ok { for (1..5) { $p->update($_); sleep 1 } }
               'Count 1-10 (2)';
-  lives_ok { $p->message('Hello Mum!') }  'Count 1-10 (3)';
-  lives_ok { for (6..10) { $p->update($_); sleep 1 } } 'Count 1-10 (4)';
-};
-print $out;
+    lives_ok { $p->message('Hello Mum!') }  'Count 1-10 (3)';
+    lives_ok { for (6..10) { $p->update($_); sleep 1 } } 'Count 1-10 (4)';
+  };
+  print $out;
+
   my @lines = grep $_ ne '', split /[\n\r]+/, $err;
-  print Dumper \@lines
+  diag explain \@lines
     if $ENV{TEST_DEBUG};
   ok grep $_ eq 'Hello Mum!', @lines;
-  like $lines[-1], qr/\[=+\]/,                                  'Count 1-10 (6)';
-  like $lines[-1], qr/^fred: \s*100%/,                          'Count 1-10 (7)';
-  like $lines[-1], qr/D[ \d]\dh\d{2}m\d{2}s$/,                  'Count 1-10 (8)';
-  like $lines[-2], qr/ Left$/,                                  'Count 1-10 (9)';
-
+  like $lines[-1], qr/\[=+\]/,                  'Count 1-10 (6)';
+  like $lines[-1], qr/^fred: \s*100%/,          'Count 1-10 (7)';
+  like $lines[-1], qr/D[ \d]\dh\d{2}m\d{2}s$/,  'Count 1-10 (8)';
+  like $lines[-2], qr/ Left$/,                  'Count 1-10 (9)';
+}
 
 # ----------------------------------------------------------------------------

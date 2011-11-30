@@ -1,6 +1,7 @@
 # (X)Emacs mode: -*- cperl -*-
 
 use strict;
+use warnings;
 
 =head1 Unit Test Package for Term::ProgressBar
 
@@ -8,7 +9,6 @@ This package tests the basic functionality of Term::ProgressBar.
 
 =cut
 
-use Data::Dumper qw( Dumper );
 use Test::More tests => 31;
 use Test::Exception;
 
@@ -33,15 +33,15 @@ Update it it from 1 to 10.
 
 =cut
 {
-  my $p;
+  my ($out, $err) = capture {
+    my $p;
+    lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-10 (1)';
+    lives_ok { $p->update($_) for 1..10 } 'Count 1-10 (2)';
+  };
+  print $out;
 
-my ($out, $err) = capture {
-  lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-10 (1)';
-  lives_ok { $p->update($_) for 1..10 } 'Count 1-10 (2)';
-};
-print $out;
-  my @lines = grep $_ ne '', split /\r/, $err;
-  print Dumper \@lines
+  my @lines = grep {$_ ne ''} split /\r/, $err;
+  diag explain \@lines
     if $ENV{TEST_DEBUG};
   like $lines[-1], qr/\[=+\]/,            'Count 1-10 (3)';
   like $lines[-1], qr/^\s*100%/,          'Count 1-10 (4)';
@@ -64,16 +64,15 @@ Update it it from 1 to 9.
 =cut
 
 {
-  my $p;
-
-my ($out, $err) = capture {
-  lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-9 (1)';
-  lives_ok { $p->update($_) for 1..9 } 'Count 1-9 (2)';
-};
-print $out;
+  my ($out, $err) = capture {
+    my $p;
+    lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-9 (1)';
+    lives_ok { $p->update($_) for 1..9 } 'Count 1-9 (2)';
+  };
+  print $out;
 
   my @lines = grep $_ ne '', split /\r/, $err;
-  print Dumper \@lines
+  diag explain \@lines
     if $ENV{TEST_DEBUG};
   like $lines[-1], qr/\[=+ +\]/,          'Count 1-9 (3)';
   like $lines[-1], qr/^\s*90%/,           'Count 1-9 (4)';
@@ -90,13 +89,14 @@ percentage or displayed bar).
 
 =cut
 {
-my ($out, $err) = capture {
-  my $b = Term::ProgressBar->new(1000000);
-  $b->update($_) foreach (0, 1);
-};
-print $out;
-  my @lines = grep $_ ne '', split /\r/, $err;
-  print Dumper \@lines
+  my ($out, $err) = capture {
+    my $tp = Term::ProgressBar->new(1000000);
+    $tp->update($_) foreach (0, 1);
+  };
+  #print $out;
+
+  my @lines = grep {$_ ne ''} split /\r/, $err;
+  diag explain \@lines
     if $ENV{TEST_DEBUG};
   is scalar @lines, 1;
 }

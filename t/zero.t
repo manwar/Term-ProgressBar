@@ -1,6 +1,7 @@
 # (X)Emacs mode: -*- cperl -*-
 
 use strict;
+use warnings;
 
 =head1 Unit Test Package for Term::ProgressBar
 
@@ -8,7 +9,6 @@ This package tests the zero-progress handling of progress bar.
 
 =cut
 
-use Data::Dumper qw( Dumper );
 use Test::More tests => 9;
 use Test::Exception;
 
@@ -34,15 +34,15 @@ Update it it from 1 to 10.
 
 {
   my $p;
-  my $name;
-my ($out, $err)  = capture {
-  $name = 'doing nothing';
-  lives_ok { $p = Term::ProgressBar->new($name, 0); } 'V1 mode ( 1)';
-  lives_ok { $p->update($_) for 1..10 } 'V1 mode ( 2)';
-};
-print $out;
-  my @lines = grep $_ ne '', split /\r/, $err;
-  print Dumper \@lines
+  my $name = 'doing nothing';
+  my ($out, $err)  = capture {
+    lives_ok { $p = Term::ProgressBar->new($name, 0); } 'V1 mode ( 1)';
+    lives_ok { $p->update($_) for 1..10 } 'V1 mode ( 2)';
+  };
+  print $out;
+
+  my @lines = grep { $_ ne ''} split /\r/, $err;
+  diag explain @lines
     if $ENV{TEST_DEBUG};
   like $lines[-1], qr/^$name:/,                                  'V1 mode ( 3)';
   like $lines[-1], qr/\(nothing to do\)/,                        'V1 mode ( 4)';
@@ -65,16 +65,17 @@ Update it it from 1 to 10.
 {
   my $p;
   my $name = 'zero';
-my ($out, $err) = capture {
-  lives_ok { $p = Term::ProgressBar->new({ count => 0, name => $name }); } 'V2 mode ( 1)';
-  lives_ok { $p->update($_) for 1..10 } 'V2 mode ( 2)';
-};
-print $out;
-  my @lines = grep $_ ne '', split /\r/, $err;
-  print Dumper \@lines
+  my ($out, $err) = capture {
+    lives_ok { $p = Term::ProgressBar->new({ count => 0, name => $name }); } 'V2 mode ( 1)';
+    lives_ok { $p->update($_) for 1..10 } 'V2 mode ( 2)';
+  };
+  print $out;
+
+  my @lines = grep {$_ ne ''} split /\r/, $err;
+  diag explain @lines
     if $ENV{TEST_DEBUG};
-  like $lines[-1], qr/^$name:/,                                  'V2 mode ( 3)';
-  like $lines[-1], qr/\(nothing to do\)/,                        'V2 mode ( 4)';
+  like $lines[-1], qr/^$name:/,             'V2 mode ( 3)';
+  like $lines[-1], qr/\(nothing to do\)/,   'V2 mode ( 4)';
 }
 
 # ----------------------------------------------------------------------------

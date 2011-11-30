@@ -1,6 +1,7 @@
 # (X)Emacs mode: -*- cperl -*-
 
 use strict;
+use warnings;
 
 =head1 Unit Test Package for Term::ProgressBar
 
@@ -8,18 +9,12 @@ This package tests the basic functionality of Term::ProgressBar.
 
 =cut
 
-use Data::Dumper qw( Dumper );
 use Test::More tests => 8;
 use Test::Exception;
 
-use constant MESSAGE1 => 'Walking on the Milky Way';
+use Capture::Tiny qw(capture);
 
-=head2 Test 1: compilation
-
-This test confirms that the test script and the modules it calls compiled
-successfully.
-
-=cut
+my $MESSAGE1 = 'Walking on the Milky Way';
 
 use_ok 'Term::ProgressBar';
 
@@ -42,23 +37,24 @@ Update it it from 1 to 10.
 (6) Check bar number is 100%
 
 =cut
-use Capture::Tiny qw(capture);
 
-my ($out, $err) = capture {
-  my $p;
-  lives_ok { $p = Term::ProgressBar->new('bob', 10); } 'Count 1-10 (1)';
-  lives_ok { $p->update($_) for 1..5  } 'Count 1-10 (2)';
-  lives_ok { $p->message(MESSAGE1)    } 'Count 1-10 (3)';
-  lives_ok { $p->update($_) for 6..10 } 'Count 1-10 (4)';
-};
-print $out;
+{
+  my ($out, $err) = capture {
+    my $p;
+    lives_ok { $p = Term::ProgressBar->new('bob', 10); } 'Count 1-10 (1)';
+    lives_ok { $p->update($_) for 1..5  } 'Count 1-10 (2)';
+    lives_ok { $p->message($MESSAGE1)    } 'Count 1-10 (3)';
+    lives_ok { $p->update($_) for 6..10 } 'Count 1-10 (4)';
+  };
+  print $out;
 
   $err =~ s!^.*\r!!gm;
-  print STDERR "ERR:\n$err\nlength: ", length($err), "\n"
+  diag "ERR:\n$err\nlength: ", length($err)
     if $ENV{TEST_DEBUG};
 
   my @lines = split /\n/, $err;
 
-  is $lines[0], MESSAGE1;
+  is $lines[0], $MESSAGE1;
   like $lines[-1], qr/bob:\s+\d+% \#+/,            'Count 1-10 (6)';
   like $lines[-1], qr/^bob:\s+100%/,               'Count 1-10 (7)';
+}
