@@ -12,7 +12,7 @@ This package tests the name functionality of Term::ProgressBar.
 use Test::More tests => 20;
 use Test::Exception;
 
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_stderr);
 
 my $MESSAGE1 = 'The Gospel of St. Jude';
 my $NAME1    = 'Algenon';
@@ -43,13 +43,12 @@ Update it it from 1 to 10.
 
 {
   my $p;
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     lives_ok {
                 $p = Term::ProgressBar->new({count => 10, name => $NAME1});
               } 'Count 1-10 ( 1)';
     lives_ok { $p->update($_) for 1..3  } 'Count 1-10 ( 2)';
   };
-  print $out;
 
   $err =~ s!^.*\r!!gm;
   diag "ERR (1) :\n$err\nlength: " . length($err)
@@ -67,11 +66,10 @@ Update it it from 1 to 10.
   cmp_ok length($bar), '<', $barexpect+1;
 
 
-  ($out, $err) = capture {
+  $err = capture_stderr {
     lives_ok { $p->message($MESSAGE1)    } 'Count 1-10 ( 5)';
     lives_ok { $p->update($_) for 6..10 } 'Count 1-10 ( 6)';
   };
-  print $out;
 
   $err =~ s!^.*\r!!gm;
   diag "ERR (2) :\n$err\nlength: " . length($err)
@@ -106,11 +104,10 @@ Use v1 mode
 
 {
   my $p;
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     lives_ok { $p = Term::ProgressBar->new($NAME2, 10); } 'Count 1-10 ( 1)';
     lives_ok { $p->update($_) for 1..3  }                'Count 1-10 ( 2)';
   };
-  print $out;
 
   $err =~ s!^.*\r!!gm;
   diag "ERR (1) :\n$err\nlength: " . length($err)
@@ -127,11 +124,10 @@ Use v1 mode
   cmp_ok length($bar), '>', $barexpect -1;
   cmp_ok length($bar), '<', $barexpect+1;
   
-  ($out, $err) = capture {
+  $err = capture_stderr {
     lives_ok { $p->message($MESSAGE1)    }  'Count 1-10 ( 5)';
     lives_ok { $p->update($_) for 6..10 }  'Count 1-10 ( 6)';
   };
-  print $out;
 
   $err =~ s!^.*\r!!gm;
   diag "ERR (2) :\n$err\nlength: " . length($err)

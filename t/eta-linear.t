@@ -12,7 +12,7 @@ This package tests the basic functionality of Term::ProgressBar.
 use Test::More tests => 9;
 use Test::Exception;
 
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_stderr);
 
 use Term::ProgressBar;
 
@@ -38,7 +38,7 @@ Update it it from 1 to 10.
 =cut
 
 {
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     my $p;
     lives_ok {
                 $p = Term::ProgressBar->new({count => 10, name => 'fred',
@@ -49,7 +49,6 @@ Update it it from 1 to 10.
     lives_ok { $p->message('Hello Mum!') }  'Count 1-10 (3)';
     lives_ok { for (6..10) { $p->update($_); sleep 1 } } 'Count 1-10 (4)';
   };
-  print $out;
 
   my @lines = grep $_ ne '', split /[\n\r]+/, $err;
   diag explain \@lines

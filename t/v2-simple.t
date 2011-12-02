@@ -12,7 +12,7 @@ This package tests the basic functionality of Term::ProgressBar.
 use Test::More tests => 31;
 use Test::Exception;
 
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_stderr);
 
 use_ok 'Term::ProgressBar';
 
@@ -33,12 +33,11 @@ Update it it from 1 to 10.
 
 =cut
 {
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     my $p;
     lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-10 (1)';
     lives_ok { $p->update($_) for 1..10 } 'Count 1-10 (2)';
   };
-  print $out;
 
   my @lines = grep {$_ ne ''} split /\r/, $err;
   diag explain \@lines
@@ -64,12 +63,11 @@ Update it it from 1 to 9.
 =cut
 
 {
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     my $p;
     lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-9 (1)';
     lives_ok { $p->update($_) for 1..9 } 'Count 1-9 (2)';
   };
-  print $out;
 
   my @lines = grep $_ ne '', split /\r/, $err;
   diag explain \@lines
@@ -89,11 +87,10 @@ percentage or displayed bar).
 
 =cut
 {
-  my ($out, $err) = capture {
+  my $err = capture_stderr {
     my $tp = Term::ProgressBar->new(1000000);
     $tp->update($_) foreach (0, 1);
   };
-  #print $out;
 
   my @lines = grep {$_ ne ''} split /\r/, $err;
   diag explain \@lines

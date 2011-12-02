@@ -12,7 +12,7 @@ WriteMakefile (
                      'Class::MethodMaker' => '1.02',
                      'Term::ReadKey' => '2.14',},
   BUILD_REQUIRES => {
-                     'Capture::Tiny' => '0.11',
+                     'Capture::Tiny' => '0.12',
                      'Test::More'    => '0.80',
                      'Test::Exception' => '0.31',
                      'File::Temp'    => 0,

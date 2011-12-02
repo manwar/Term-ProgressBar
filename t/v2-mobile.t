@@ -12,7 +12,7 @@ This package tests the moving target functionality of Term::ProgressBar.
 use Test::More tests => 7;
 use Test::Exception;
 
-use Capture::Tiny qw(capture);
+use Capture::Tiny qw(capture_stderr);
 
 use_ok 'Term::ProgressBar';
 
@@ -36,14 +36,13 @@ Update it from 11 to 20.
 
 =cut
 
-my ($out, $err) = capture {
+my $err = capture_stderr {
   my $p;
   lives_ok { $p = Term::ProgressBar->new(10); } 'Count 1-20 (1)';
   lives_ok { $p->update($_) for 1..5  }    'Count 1-20 (2)';
   lives_ok { $p->target(20)    }           'Count 1-20 (3)';
   lives_ok { $p->update($_) for 11..20 }   'Count 1-20 (4)';
 };
-print $out;
 
 $err =~ s!^.*\r!!gm;
 diag "ERR:\n$err\nlength: " . length($err)
