@@ -1,4 +1,5 @@
 ^(.*/)?CVS/.*
+^.git
 ^Makefile(.old)?$
 ^Build$
 ^Clean$
