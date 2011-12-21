@@ -1,5 +1,11 @@
 Revision history for Perl extension Term-ProgressBar.
 
+2.10
+	- remove Build.PL (keep the Makefile.PL only)
+	- Replace home-made testing tools with CPAN-ish tools
+	- Require Capture::Tiny for testing
+	- New co-maintainer: Gabor Szabo
+
 2.09  Sun Mar 13  9:17 PM GMT 2005
 	- Fix for incorrect formatting of 'D...' time done at end
 
