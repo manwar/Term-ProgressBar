@@ -254,7 +254,7 @@ use constant DEBUG => 0;
 
 use vars qw($PACKAGE $VERSION);
 $PACKAGE = 'Term-ProgressBar';
-$VERSION = '2.09';
+$VERSION = '2.10';
 
 # ----------------------------------
 # CLASS CONSTRUCTION
