@@ -1,6 +1,6 @@
 Revision history for Perl extension Term-ProgressBar.
 
-2.11
+2.11 Fri Feb 17 12:31:04 2012
     - skip the signature verification
 
 2.10  Wed Dec 21 11:18:26 2011
@@ -26,11 +26,11 @@ Revision history for Perl extension Term-ProgressBar.
 
 2.06  Sun Mar 14 10:46 AM GMT 2004
 	- Add patch to cope when terminal size cannot be detected or is
-	  too small.  
+	  too small.
 	  Thanks to Ed Avis (<ed at membled dot com>) for the patch.
-	- Add patch to test to avoid failure on windoze due to unlinking open 
+	- Add patch to test to avoid failure on windoze due to unlinking open
 	  files
-	- Add patch to cope when Term::ReadKey fails to initialize for some 
+	- Add patch to cope when Term::ReadKey fails to initialize for some
 	  reason.
 	  Thanks to Scott Cain (<cain at cshl dot org>) for the patch.
 	- Add patch to suppress unnecessary terminal updates
