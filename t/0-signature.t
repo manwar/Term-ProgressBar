@@ -1,16 +1,18 @@
 #!/usr/bin/perl
 use strict;
-print "1..1\n";
+use warnings;
+
+use Test::More;
+
+plan skip_all => 'Signature has not been updated';
+
 
 if ( ! eval { require Module::Signature; 1 } ) {
-  print("ok 1 # skip ",
-        "Next time around, consider install Module::Signature, ",
-        "# so you can verify the integrity of this distribution.\n");
+  plan skip_all => 'Needs Module::Signature to verify the integrity of this distribution.';
 } elsif ( ! eval { require Socket; Socket::inet_aton('pgp.mit.edu') } ) {
-  print "ok 1 # skip ", "Cannot connect to the keyserver\n";
+  plan skip_all => 'Cannot connect to the keyserver';
 } else {
-  (Module::Signature::verify() == Module::Signature::SIGNATURE_OK())
-    or print "not ";
-  print "ok 1 # Valid signature\n";
+  plan tests => 1;
+  is Module::Signature::verify(), Module::Signature::SIGNATURE_OK(), 'Valid signature';
 }
 

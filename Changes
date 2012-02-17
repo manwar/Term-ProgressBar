@@ -1,5 +1,8 @@
 Revision history for Perl extension Term-ProgressBar.
 
+2.11
+    - skip the signature verification
+
 2.10  Wed Dec 21 11:18:26 2011
 	- remove Build.PL (keep the Makefile.PL only)
 	- Replace home-made testing tools with CPAN-ish tools
