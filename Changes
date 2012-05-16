@@ -1,7 +1,9 @@
 Revision history for Perl extension Term-ProgressBar.
 
+2.12 Wed May 16 12:47:16 2012
     - use strict; use warnings; in examples
     - remove bareword from POD (JBAKER)
+    - make lbrack and rbrack official.
 
 2.11 Fri Feb 17 12:31:04 2012
     - skip the signature verification

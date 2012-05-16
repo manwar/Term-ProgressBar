@@ -254,7 +254,7 @@ use constant DEBUG => 0;
 
 use vars qw($PACKAGE $VERSION);
 $PACKAGE = 'Term-ProgressBar';
-$VERSION = '2.11';
+$VERSION = '2.12';
 
 # ----------------------------------
 # CLASS CONSTRUCTION
@@ -582,6 +582,24 @@ utilizing the return value of L<update|"update">.
 
 See F<examples/powers4> and F<examples/powers3> to see minor characters in
 action, and not in action, respectively.
+
+=back
+
+=head2 Configuration
+
+=over 4
+
+=item lbrack
+
+Left bracket ( defaults to [ )
+
+ $progress->lbrack('<');
+
+=item rbrack
+
+Right bracket ( defaults to ] )
+
+ $progress->rbrack('>');
 
 =back
 
