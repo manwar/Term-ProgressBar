@@ -149,7 +149,7 @@ distribution set (it is not installed as part of the module.
 
   my $progress = Term::ProgressBar->new({name  => 'Powers',
                                          count => $max,
-                                         ETA   => linear, });
+                                         ETA   => 'linear', });
   $progress->max_update_rate(1);
   my $next_update = 0;
 

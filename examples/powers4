@@ -1,12 +1,17 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
 
 use Term::ProgressBar 2.00;
 
 use constant MAX => 1_000_000;
 
-my $max = int($ARGV[0]+0) || MAX;
-my $progress = Term::ProgressBar->new({name => 'Powers', count => $max,
-                                       ETA => linear, });
+my $max = int($ARGV[0] || MAX);
+my $progress = Term::ProgressBar->new({
+	name => 'Powers',
+	count => $max,
+	ETA => 'linear',
+});
 #$progress->minor(0);
 my $next_update = 0;
 

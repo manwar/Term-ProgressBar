@@ -1,10 +1,12 @@
 #!/usr/bin/perl
+use strict;
+use warnings;
 
 use Term::ProgressBar 2.00;
 
 use constant MAX => 100_000;
 
-my $max = int($ARGV[0]+0) || MAX;
+my $max = int($ARGV[0] || MAX);
 my $progress = Term::ProgressBar->new($max);
 
 for (0..$max) {
