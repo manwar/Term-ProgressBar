@@ -19,4 +19,9 @@ WriteMakefile (
                      'Test::Exception' => '0.31',
                      'File::Temp'    => 0,
   },
+    META_MERGE        => {
+       resources => {
+           repository  =>  'https://github.com/szabgab/Term-ProgressBar',
+       },
+	},
 );
