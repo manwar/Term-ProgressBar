@@ -3,6 +3,8 @@ Revision history for Perl extension Term-ProgressBar.
 2.13 Fri May 18 06:24:42 2012
 	- remove unused and invalid SIGNATURE file
 	- move content of BUGS to Changes
+	- Remove the INSTALL and configure files,
+	  people should use the standard CPAN installation tools
     
 
 2.12 Wed May 16 12:47:16 2012
