@@ -1,5 +1,8 @@
 Revision history for Perl extension Term-ProgressBar.
 
+2.13 Fri May 18 06:24:42 2012
+    - remove unused and invalid SIGNATURE file
+
 2.12 Wed May 16 12:47:16 2012
     - use strict; use warnings; in examples
     - remove bareword from POD (JBAKER)
