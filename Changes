@@ -5,6 +5,7 @@ Revision history for Perl extension Term-ProgressBar.
 	- move content of BUGS to Changes
 	- Remove the INSTALL and configure files,
 	  people should use the standard CPAN installation tools
+    - Add standard prerequisites to Makefile.PL
     
 
 2.12 Wed May 16 12:47:16 2012

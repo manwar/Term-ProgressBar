@@ -1,5 +1,3 @@
-# (X)Emacs mode: -*- cperl -*-
-
 package Term::ProgressBar;
 
 #XXX TODO Redo original test with count=20
@@ -13,18 +11,18 @@ package Term::ProgressBar;
 #         If name is wider than term, trim name
 #         Don't update progress bar on new?
 
-=head1	NAME
+=head1 NAME
 
 Term::ProgressBar - provide a progress meter on a standard terminal
 
-=head1	SYNOPSIS
+=head1 SYNOPSIS
 
   use Term::ProgressBar;
 
   $progress = Term::ProgressBar->new ({count => $count});
   $progress->update ($so_far);
 
-=head1	DESCRIPTION
+=head1 DESCRIPTION
 
 Term::ProgressBar provides a simple progress bar on the terminal, to let the
 user know that something is happening, roughly how much stuff has been done,
@@ -254,7 +252,7 @@ use constant DEBUG => 0;
 
 use vars qw($PACKAGE $VERSION);
 $PACKAGE = 'Term-ProgressBar';
-$VERSION = '2.12';
+$VERSION = '2.13';
 
 # ----------------------------------
 # CLASS CONSTRUCTION
@@ -496,7 +494,7 @@ sub init {
     } else {
       $config{bar_width}  = $target;
       die "configured bar_width $config{bar_width} < 1"
- 	if $config{bar_width} < 1;
+      if $config{bar_width} < 1;
     }
   }
 
@@ -838,10 +836,10 @@ sub update {
       }
     }
     for ($self->{last_printed}) {
-	unless (defined and $_ eq $to_print) {
-	    print $fh $to_print;
-	}
-	$_ = $to_print;
+        unless (defined and $_ eq $to_print) {
+            print $fh $to_print;
+        }
+        $_ = $to_print;
     }
 
     $next -= $self->offset;
@@ -942,13 +940,9 @@ sub message {
 
 # ----------------------------------------------------------------------
 
-=head1 BUGS
-
-Z<>
-
 =head1 REPORTING BUGS
 
-Email the author.
+via RT: L<https://rt.cpan.org/Dist/Display.html?Name=Pipe>
 
 =head1 COMPATIBILITY
 
@@ -958,21 +952,21 @@ Various other defaults are set to emulate version one (e.g., the major output
 character is '#', the bar width is set to 50 characters and the output
 filehandle is not treated as a terminal). This mode is deprecated.
 
-=head1	AUTHOR
+=head1 AUTHOR
 
 Martyn J. Pearce fluffy@cpan.org
 
 Significant contributions from Ed Avis, amongst others.
+
+=head1 MAINTAINER
+
+Gabor Szabo L<http://szabgab.com/>
 
 =head1 COPYRIGHT
 
 Copyright (c) 2001, 2002, 2003, 2004, 2005 Martyn J. Pearce.  This program is
 free software; you can redistribute it and/or modify it under the same terms
 as Perl itself.
-
-=head1	SEE ALSO
-
-Z<>
 
 =cut
 

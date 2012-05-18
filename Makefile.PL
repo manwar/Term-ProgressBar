@@ -5,13 +5,18 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
-  NAME         => 'Term-ProgressBar',
+  NAME         => 'Term::ProgressBar',
   VERSION_FROM => 'lib/Term/ProgressBar.pm',
-  AUTHOR       => 'Martyn J. Pearce ',
-#  ABSTRACT     => 'provide a progress meter on a standard terminal',
+  ABSTRACT_FROM => 'lib/Term/ProgressBar.pm',
+  AUTHOR       => 'Martyn J. Pearce',
+  LICENSE      => 'perl',
   PREREQ_PM    => { 
-                     'Class::MethodMaker' => '1.02',
-                     'Term::ReadKey' => '2.14',
+    'Class::MethodMaker' => '1.02',
+    'Term::ReadKey' => '2.14',
+
+    'Carp'  => 0,
+    'Fatal' => 0,
+    'POSIX' => 0,
   },
   BUILD_REQUIRES => {
                      'Capture::Tiny' => '0.13',
@@ -19,9 +24,9 @@ WriteMakefile (
                      'Test::Exception' => '0.31',
                      'File::Temp'    => 0,
   },
-    META_MERGE        => {
+  META_MERGE        => {
        resources => {
            repository  =>  'https://github.com/szabgab/Term-ProgressBar',
        },
-	},
+  },
 );
