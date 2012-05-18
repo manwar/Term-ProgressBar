@@ -1,15 +1,17 @@
 Revision history for Perl extension Term-ProgressBar.
 
 2.13 Fri May 18 06:24:42 2012
-    - remove unused and invalid SIGNATURE file
+	- remove unused and invalid SIGNATURE file
+	- move content of BUGS to Changes
+    
 
 2.12 Wed May 16 12:47:16 2012
-    - use strict; use warnings; in examples
-    - remove bareword from POD (JBAKER)
-    - make lbrack and rbrack official.
+	- use strict; use warnings; in examples
+	- remove bareword from POD (JBAKER)
+	- make lbrack and rbrack official.
 
 2.11 Fri Feb 17 12:31:04 2012
-    - skip the signature verification
+	- skip the signature verification
 
 2.10  Wed Dec 21 11:18:26 2011
 	- remove Build.PL (keep the Makefile.PL only)
@@ -71,6 +73,7 @@ Revision history for Perl extension Term-ProgressBar.
 
 1.51  Sun Dec  2 12:22 PM GMT 2001
 	- Correct Bug #001
+	  Wrong minor character (= should be *) selected by default.
 
 1.50  Sat Dec  1  1:11 PM GMT 2001
 	- Merged with Utility::Progress by Martyn J. Pearce
