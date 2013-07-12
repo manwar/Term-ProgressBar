@@ -240,6 +240,7 @@ use constant DEFAULTS => {
                           term_width => undef,
                           term       => undef,
                           remove     => 0,
+                          silent     => 0,
                          };
 
 use constant ETA_TYPES => { map { $_ => 1 } qw( linear ) };
@@ -284,7 +285,8 @@ sub __force_term {
 # ----------------------------------
 
 sub term_size {
-  my ($fh) = @_;
+  my ( $self, $fh ) = @_;
+  return if $self->silent;
 
   eval {
     require Term::ReadKey;
@@ -364,6 +366,19 @@ Sometimes we can't correctly determine the terminal width. You can use this
 parameter to force a term width of a particular size. Use a positive integer,
 please :)
 
+=item silent
+
+If passed a true value, Term::ProgressBar will do nothing at all. Useful in
+scripts where the progress bar is optional (or just plain doesn't work due to
+issues with modules it relies on).
+
+Instead, tell the constructor you want it to be silent and you don't need to
+change the rest of your program:
+
+    my $progress = Term::ProgressBar->new( { count => $count, silent => $silent } );
+    # later
+    $progress->update; # does nothing
+
 =item ETA
 
 A total time estimation to use.  If enabled, a time finished estimation is
@@ -429,13 +444,15 @@ Class::MethodMaker->import (new_with_init => 'new',
 
 sub init {
   my $self = shift;
+  return if $self->silent;
 
   # V1 Compatibility
   return $self->init({count      => $_[1], name => $_[0],
                       term_width => 50,    bar_width => 50,
                       major_char => '#',   minor_char => '',
                       lbrack     => '',    rbrack     => '',
-                      term       => '0 but true', })
+                      term       => '0 but true',
+                      silent     => 0,})
     if @_ == 2;
 
   my $target;
@@ -475,7 +492,7 @@ sub init {
     die "term width $config{term_width} (from __force_term) too small"
       if $config{term_width} < 5;
   } elsif ( $config{term} and ! defined $config{term_width}) {
-    $config{term_width} = term_size($config{fh});
+    $config{term_width} = $self->term_size($config{fh});
     die if $config{term_width} < 5;
   }
 
@@ -637,6 +654,7 @@ Class::MethodMaker->import
                          offset      scale
                          fh          start
                          max_update_rate
+                         silent
                      /],
    counter       => [qw/ last_position last_update /],
    boolean       => [qw/ minor name_printed pb_ended remove /],
@@ -647,6 +665,7 @@ Class::MethodMaker->import
 # We generate these by hand since we want to check the values.
 sub bar_width {
     my $self = shift;
+    return if $self->silent;
     return $self->{bar_width} if not @_;
     croak 'wrong number of arguments' if @_ != 1;
     croak 'bar_width < 1' if $_[0] < 1;
@@ -654,6 +673,7 @@ sub bar_width {
 }
 sub term_width {
     my $self = shift;
+    return if $self->silent;
     return $self->{term_width} if not @_;
     croak 'wrong number of arguments' if @_ != 1;
     croak 'term_width must be at least 5' if $self->term and $_[0] < 5;
@@ -662,6 +682,7 @@ sub term_width {
 
 sub target {
   my $self = shift;
+  return if $self->silent;
 
   if ( @_ ) {
     my ($target) = @_;
@@ -680,7 +701,7 @@ sub target {
 
 sub ETA {
   my $self = shift;
-
+  return if $self->silent;
   if (@_) {
     my ($type) = @_;
     croak "Invalid ETA type: $type\n"
@@ -748,6 +769,7 @@ The next value of so_far at which to call C<update>.
 
 sub update {
   my $self = shift;
+  return if $self->silent;
   my ($so_far) = @_;
 
   if ( ! defined $so_far ) {
@@ -927,6 +949,7 @@ The message to output.
 
 sub message {
   my $self = shift;
+  return if $self->silent;
   my ($string) = @_;
   chomp ($string);
 
