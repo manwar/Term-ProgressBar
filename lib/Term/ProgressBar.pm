@@ -358,6 +358,12 @@ The filehandle to output to.  Defaults to stderr.  Do not try to use
 *foo{THING} syntax if you want Term capabilities; it does not work.  Pass in a
 globref instead.
 
+=item term_width
+
+Sometimes we can't correctly determine the terminal width. You can use this
+parameter to force a term width of a particular size. Use a positive integer,
+please :)
+
 =item ETA
 
 A total time estimation to use.  If enabled, a time finished estimation is
