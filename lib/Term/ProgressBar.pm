@@ -32,7 +32,7 @@ A typical use sets up the progress bar with a number of items to do, and then
 calls L<update|"update"> to update the bar whenever an item is processed.
 
 Often, this would involve updating the progress bar many times with no
-user-visible change.  To avoid uneccessary work, the update method returns a
+user-visible change.  To avoid unnecessary work, the update method returns a
 value, being the update value at which the user will next see a change.  By
 only calling update when the current value exceeds the next update value, the
 call overhead is reduced.
