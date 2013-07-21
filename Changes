@@ -1,8 +1,8 @@
 Revision history for Perl extension Term-ProgressBar.
 
-2.14
-    - Document the term_width argument to the constructor
-    - Add a "silent" option to the constructor
+2.14 Sun Jul 21 13:34:52 2013
+    - Document the term_width argument to the constructor (OVID)
+    - Add a "silent" option to the constructor (OVID)
 
 2.13 Fri May 18 06:24:42 2012
 	- remove unused and invalid SIGNATURE file
