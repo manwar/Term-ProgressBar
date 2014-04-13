@@ -1,6 +1,5 @@
-# This module is part of IO, and is released
-# under the terms of the GPL version 3, or any later version at your option. See the
-# file README and COPYING for more information.
+#  This program is free software; you can redistribute it and/or
+#  modify it under the same terms as Perl itself.
 # Copyright 2014 by Don Armstrong <don@donarmstrong.com>.
 
 package Term::ProgressBar::IO;
