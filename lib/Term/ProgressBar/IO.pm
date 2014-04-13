@@ -40,7 +40,7 @@ use Carp;
 use Fcntl qw(:seek);
 
 BEGIN{
-     $VERSION = q(0.1);
+     $VERSION = q(2.15);
      $DEBUG = 0 unless defined $DEBUG;
 }
 

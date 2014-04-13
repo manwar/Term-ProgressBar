@@ -1,6 +1,6 @@
 Revision history for Perl extension Term-ProgressBar
 
-2.15 UNRELEASED
+2.15 2014-04-13 23:23:23
     - Add Term::ProgressBar::IO (DON)
 
 2.14 2013-07-21 13:34:52

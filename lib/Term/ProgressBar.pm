@@ -253,7 +253,7 @@ use constant DEBUG => 0;
 
 use vars qw($PACKAGE $VERSION);
 $PACKAGE = 'Term-ProgressBar';
-$VERSION = '2.14';
+$VERSION = '2.15';
 
 # ----------------------------------
 # CLASS CONSTRUCTION
@@ -971,7 +971,7 @@ sub message {
 
 =head1 REPORTING BUGS
 
-via RT: L<https://rt.cpan.org/Dist/Display.html?Name=Pipe>
+via RT: L<https://rt.cpan.org/Dist/Display.html?Name=Term-ProgressBar>
 
 =head1 COMPATIBILITY
 
@@ -989,7 +989,7 @@ Significant contributions from Ed Avis, amongst others.
 
 =head1 MAINTAINER
 
-Gabor Szabo L<http://szabgab.com/>
+Gabor Szabo L<http://szabgab.com/> L<http://perlmaven.com/>
 
 =head1 COPYRIGHT
 
