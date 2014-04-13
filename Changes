@@ -1,5 +1,8 @@
 Revision history for Perl extension Term-ProgressBar
 
+2.15 UNRELEASED
+    - Add Term::ProgressBar::IO (DON)
+
 2.14 2013-07-21 13:34:52
     - Document the term_width argument to the constructor (OVID)
     - Add a "silent" option to the constructor (OVID)
