@@ -298,7 +298,7 @@ sub term_size {
   my $result;
   eval {
     $result = (Term::ReadKey::GetTerminalSize($fh))[0];
-    $result-- if ($^O eq "MSWin32");
+    $result-- if ($^O eq "MSWin32" or $^O eq "cygwin");
   }; if ( $@ ) {
     warn "error from Term::ReadKey::GetTerminalSize(): $@";
   }
