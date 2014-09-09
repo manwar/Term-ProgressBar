@@ -4,6 +4,7 @@ Revision history for Perl extension Term-ProgressBar
    - Cygwin width issue  RT #8344 (LukeGoodsell)
    - Remove unused DEBUG variables.
    - Stop exorting $PACKAGE $VERSION.
+   - Add use warnings;
 
 2.15 2014-04-13 23:23:23
     - Add Term::ProgressBar::IO (DON)

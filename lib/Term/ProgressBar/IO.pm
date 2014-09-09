@@ -2,6 +2,8 @@ package Term::ProgressBar::IO;
 use strict;
 use warnings;
 
+our $VERSION = '2.16';
+
 #  This program is free software; you can redistribute it and/or
 #  modify it under the same terms as Perl itself.
 # Copyright 2014 by Don Armstrong <don@donarmstrong.com>.
@@ -36,8 +38,6 @@ None known.
 use parent qw(Term::ProgressBar);
 use Carp;
 use Fcntl qw(:seek);
-
-our $VERSION = '2.16';
 
 =head1 METHODS
 

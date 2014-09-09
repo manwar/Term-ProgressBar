@@ -2,6 +2,7 @@ package Term::ProgressBar;
 use strict;
 use warnings;
 
+our $VERSION = '2.16';
 
 #XXX TODO Redo original test with count=20
 #         Amount Output
@@ -182,26 +183,10 @@ distribution set (it is not installed as part of the module.
 
 =cut
 
-# Utility --------------------------
-
 use Carp                    qw( croak );
 use Class::MethodMaker 1.02 qw( );
 use Fatal                   qw( open sysopen close seek );
 use POSIX                   qw( ceil strftime );
-
-# ----------------------------------------------------------------------
-
-# CLASS METHODS --------------------------------------------------------
-
-# ----------------------------------
-# CLASS CONSTANTS
-# ----------------------------------
-
-=head1 CLASS CONSTANTS
-
-Z<>
-
-=cut
 
 use constant MINUTE => 60;
 use constant HOUR   => 60 * MINUTE;
@@ -238,15 +223,6 @@ use constant ETA_TYPES => { map { $_ => 1 } qw( linear ) };
 
 use constant ALREADY_FINISHED => 'progress bar already finished';
 
-our $VERSION = '2.16';
-
-# ----------------------------------
-# CLASS CONSTRUCTION
-# ----------------------------------
-
-# ----------------------------------
-# CLASS COMPONENTS
-# ----------------------------------
 
 # This is here to allow testing to redirect away from the terminal but still
 # see terminal output, IYSWIM
@@ -301,20 +277,9 @@ sub term_size {
   return $result;
 }
 
-
-# INSTANCE METHODS -----------------------------------------------------
-
-# ----------------------------------
-# INSTANCE CONSTRUCTION
-# ----------------------------------
+# Don't document hash keys until tested that the give the desired affect!
 
 =head1 INSTANCE CONSTRUCTION
-
-Z<>
-
-=cut
-
-# Don't document hash keys until tested that the give the desired affect!
 
 =head2 new
 
