@@ -13,3 +13,5 @@
 ^INFO.yaml$
 ^_build/
 ^MYMETA.*
+cover_db/
+.travis.yml
