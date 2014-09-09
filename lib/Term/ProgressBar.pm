@@ -1,4 +1,7 @@
 package Term::ProgressBar;
+use strict;
+use warnings;
+
 
 #XXX TODO Redo original test with count=20
 #         Amount Output
@@ -179,18 +182,6 @@ distribution set (it is not installed as part of the module.
 
 =cut
 
-# ----------------------------------------------------------------------
-
-# Pragmas --------------------------
-
-use strict;
-
-# Inheritance ----------------------
-
-use base qw( Exporter );
-use vars '@EXPORT_OK';
-@EXPORT_OK = qw( $PACKAGE $VERSION );
-
 # Utility --------------------------
 
 use Carp                    qw( croak );
@@ -247,13 +238,7 @@ use constant ETA_TYPES => { map { $_ => 1 } qw( linear ) };
 
 use constant ALREADY_FINISHED => 'progress bar already finished';
 
-use constant DEBUG => 0;
-
-# -------------------------------------
-
-use vars qw($PACKAGE $VERSION);
-$PACKAGE = 'Term-ProgressBar';
-$VERSION = '2.16';
+our $VERSION = '2.16';
 
 # ----------------------------------
 # CLASS CONSTRUCTION
