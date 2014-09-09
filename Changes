@@ -1,5 +1,8 @@
 Revision history for Perl extension Term-ProgressBar
 
+2.16 2014-09-09 17:00:00
+   - Cygwin width issue  RT #8344 (LukeGoodsell)
+
 2.15 2014-04-13 23:23:23
     - Add Term::ProgressBar::IO (DON)
 
