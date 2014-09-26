@@ -786,10 +786,11 @@ sub update {
   my $fh = $self->fh;
 
   if ( $target < 1 ) {
-    print $fh "\r";
-    printf $fh "$name: "
-      if defined $name;
-    print $fh "(nothing to do)\n";
+    if($input_so_far <= 0 or $input_so_far == $self->last_update) {
+      print $fh "\r", ' ' x $self->term_width, "\r";
+      printf $fh "$name..."
+        if defined $name and $input_so_far >= 0;
+    }
     return 2**32-1;
   }
 
