@@ -147,6 +147,67 @@ progress bar from the terminal when done.
 The complete text of this example is in F<examples/powers3> in the
 distribution set (it is not installed as part of the module.
 
+=head2 When the maximum number of items is sometimes unknown
+
+Sometimes you may wish to use the progress bar when the number of items may or
+may not be known. One common example is when you write a script that can take
+input piped from the output of another command, and then pipe the output to yet
+another command. eg:
+
+  some_command --arg value | my_script.pl | some_other_command
+
+Or ...
+
+  my_script.pl input_file output_file
+
+This example shows how you can iterate over a file specified on the command line
+with the progress bar. Since the input file may be read from STDIN, the number
+of lines may not be known. Term::ProgressBar handles this by just taking '-1' as
+the count value and with no further changes to the code. By calling update
+with the same count value, you ensure the progress bar is removed afterwards.
+
+  my $input_file = shift;
+  my $output_file = shift;
+  my $in_fh = \*STDIN;
+  my $out_fh = \*STDOUT;
+  my $message_fh = \*STDERR;
+  my $num_lines = -1;
+
+  if(defined($input_file) and $input_file ne '-') {
+    open($in_fh, $input_file) or die "Couldn't open file, '$input_file': $!";
+    my $wc_output = `wc -l $input_file`;
+    chomp($wc_output);
+    $wc_output =~ /^\s*(\d+)(\D.*)?/ or die "Couldn't parse wc output: $wc_output";
+    $num_lines = $1;
+  }
+
+  if(defined($output_file)) {
+    !-f $output_file or die "Specified output file, '$output_file', already exists";
+    open($out_fh, '>', $output_file) or die "Couldn't open output file, '$output_file': $!";
+  }
+
+  my $progress = Term::ProgressBar->new({
+    name  => 'file processor',
+    count  => $num_lines,
+    remove  => 1,
+    fh    => $message_fh,
+  });
+
+  while(my $line = <$in_fh>) {
+    chomp($line);
+    print $out_fh "I found a line: $line\n";
+    $progress->message("Found 10000!") if($line =~ /10000/);
+    $progress->update();
+  }
+
+  $progress->update($num_lines);
+
+  print $message_fh "Finished\n";
+
+When the file is defined explicitly, the progress bar displays the linewise
+progress through the file. Since the progress bar by default prints output to
+stderr, your scripts output to STDOUT will not be affected.
+
 =head2 Using Completion Time Estimation
 
   my $progress = Term::ProgressBar->new({name  => 'Powers',
@@ -299,6 +360,12 @@ a number, being equivalent to the C<count> key.
 
 The item count.  The progress is marked at 100% when update I<count> is
 invoked, and proportionally until then.
+
+If you specify a count less than zero, just the name (if specified) will be 
+displayed and (if the remove flag is set) removed when the progress bar is 
+updated with a number lower than zero. This allows you to use the progress bar
+when the count is sometimes known and sometimes not without making multiple
+changes throughout your code.
 
 =item name
 
@@ -735,12 +802,28 @@ sub update {
   my $name = $self->name;
   my $fh = $self->fh;
 
-  if ( $target < 1 ) {
+  
+  if ( $target < 0 ) {
+    if($input_so_far <= 0 or $input_so_far == $self->last_update) {
+      print $fh "\r", ' ' x $self->term_width, "\r";
+      
+      if(defined $name) {
+        if(!$self->remove or $input_so_far >= 0) {
+          print $fh "$name...";
+        }
+		if(!$self->remove and $input_so_far < 0) {
+		  print $fh "\n";
+        }
+      }
+    }
+    $self->last_update($input_so_far);
+    return 2**32-1;
+  } elsif ( $target == 0 ) {
     print $fh "\r";
     printf $fh "$name: "
       if defined $name;
     print $fh "(nothing to do)\n";
-    return 2**32-1;
+	return 2**32-1;
   }
 
   my $biggies     = $self->major_units * $so_far;
