@@ -4,6 +4,12 @@ use warnings;
 
 use ExtUtils::MakeMaker;
 
+my $mm_ver = $ExtUtils::MakeMaker::VERSION;
+if ($mm_ver =~ /_/) { # dev version
+    $mm_ver = eval $mm_ver;
+    die $@ if $@;
+}
+
 WriteMakefile (
   NAME         => 'Term::ProgressBar',
   VERSION_FROM => 'lib/Term/ProgressBar.pm',
@@ -29,4 +35,10 @@ WriteMakefile (
            repository  =>  'https://github.com/szabgab/Term-ProgressBar',
        },
   },
+  
+  ($mm_ver >= 6.48
+       ? (MIN_PERL_VERSION => 5.006)
+       : ()
+  ),
+
 );
