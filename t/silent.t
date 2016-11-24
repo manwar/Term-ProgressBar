@@ -10,7 +10,7 @@ This package tests the basic functionality of Term::ProgressBar.
 
 =cut
 
-use Test::More tests => 8;
+use Test::More tests => 13;
 use Test::Exception;
 
 use Capture::Tiny qw(capture_stderr);
@@ -55,7 +55,7 @@ Check that we still have no output.
     lives_ok { for (0..100) { $p->update($_); $p->message("Hello") } }  'Message Check ( 2)';
   };
 
-  ok !$err, 'We should sill have no output';
+  ok !$err, 'We should still have no output';
 }
 
 # ----------------------------------------------------------------------------
