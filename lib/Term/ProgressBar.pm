@@ -2,7 +2,7 @@ package Term::ProgressBar;
 use strict;
 use warnings;
 
-our $VERSION = '2.17';
+our $VERSION = '2.18';
 
 #XXX TODO Redo original test with count=20
 #         Amount Output
@@ -461,7 +461,6 @@ Class::MethodMaker->import (new_with_init => 'new',
 
 sub init {
   my $self = shift;
-  return if $self->silent;
 
   # V1 Compatibility
   return $self->init({count      => $_[1], name => $_[0],
@@ -682,7 +681,6 @@ Class::MethodMaker->import
 # We generate these by hand since we want to check the values.
 sub bar_width {
     my $self = shift;
-    return if $self->silent;
     return $self->{bar_width} if not @_;
     croak 'wrong number of arguments' if @_ != 1;
     croak 'bar_width < 1' if $_[0] < 1;
@@ -690,7 +688,6 @@ sub bar_width {
 }
 sub term_width {
     my $self = shift;
-    return if $self->silent;
     return $self->{term_width} if not @_;
     croak 'wrong number of arguments' if @_ != 1;
     croak 'term_width must be at least 5' if $self->term and $_[0] < 5;
@@ -699,7 +696,6 @@ sub term_width {
 
 sub target {
   my $self = shift;
-  return if $self->silent;
 
   if ( @_ ) {
     my ($target) = @_;
@@ -786,7 +782,10 @@ The next value of so_far at which to call C<update>.
 
 sub update {
   my $self = shift;
-  return if $self->silent;
+  # returning target+1 as next value should avoid calling update
+  # method in the smooth form of using the progress bar
+  return $self->target+1 if $self->silent;
+
   my ($so_far) = @_;
 
   if ( ! defined $so_far ) {
