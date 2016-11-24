@@ -19,7 +19,7 @@ my $MESSAGE1 = 'Walking on the Milky Way';
 
 # -------------------------------------
 
-=head2 Test
+=head2 Test 1--5
 
 Create a progress bar with 10 things.
 Update it it from 1 to 10.  Verify that it has no output.
@@ -41,7 +41,7 @@ Update it it from 1 to 10.  Verify that it has no output.
 
 # -------------------------------------
 
-=head2 Tests 9--11: Message Check
+=head2 Tests 6--8: Message Check
 
 Run a progress bar from 0 to 100, each time calling a message after an update.
 Check that we still have no output.
