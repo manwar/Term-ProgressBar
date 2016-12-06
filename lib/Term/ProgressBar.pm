@@ -1,8 +1,9 @@
 package Term::ProgressBar;
+
 use strict;
 use warnings;
 
-our $VERSION = '2.17';
+our $VERSION = '2.18';
 
 #XXX TODO Redo original test with count=20
 #         Amount Output
@@ -19,12 +20,16 @@ our $VERSION = '2.17';
 
 Term::ProgressBar - provide a progress meter on a standard terminal
 
+=head1 VERSION
+
+Version 2.18
+
 =head1 SYNOPSIS
 
-  use Term::ProgressBar;
+    use Term::ProgressBar;
 
-  $progress = Term::ProgressBar->new ({count => $count});
-  $progress->update ($so_far);
+    my $progress = Term::ProgressBar->new ({count => 10_000});
+    $progress->update(5_000);
 
 =head1 DESCRIPTION
 
@@ -57,25 +62,23 @@ bar for the same width.
 
 =head2 A really simple use
 
-  #!/usr/bin/perl
+    #!/usr/bin/perl
 
-  use Term::ProgressBar 2.00;
+    use Term::ProgressBar 2.00;
+    use constant MAX => 100_000;
 
-  use constant MAX => 100_000;
+    my $progress = Term::ProgressBar->new(MAX);
 
-  my $progress = Term::ProgressBar->new(MAX);
+    for (0..MAX) {
+        my $is_power = 0;
+        for (my $i = 0; 2**$i <= $_; $i++) {
+            $is_power = 1 if 2**$i == $_;
+        }
 
-  for (0..MAX) {
-    my $is_power = 0;
-    for(my $i = 0; 2**$i <= $_; $i++) {
-      $is_power = 1
-        if 2**$i == $_;
+        if ($is_power) {
+            $progress->update($_);
+        }
     }
-
-    if ( $is_power ) {
-      $progress->update($_);
-    }
-  }
 
 see eg/simle_use.pl
 
@@ -89,17 +92,16 @@ distribution set (it is not installed as part of the module).
 
 =head2 A smoother bar update
 
-  my $progress = Term::ProgressBar->new($max);
+    my $progress = Term::ProgressBar->new($max);
 
-  for (0..$max) {
-    my $is_power = 0;
-    for(my $i = 0; 2**$i <= $_; $i++) {
-      $is_power = 1
-        if 2**$i == $_;
+    for (0..$max) {
+        my $is_power = 0;
+        for (my $i = 0; 2**$i <= $_; $i++) {
+            $is_power = 1 if 2**$i == $_;
+        }
+
+        $progress->update($_)
     }
-
-    $progress->update($_)
-  }
 
 See eg/smooth_bar.pl
 
@@ -115,22 +117,20 @@ distribution set (it is not installed as part of the module.
 
 =head2 A (much) more efficient update
 
-  my $progress = Term::ProgressBar->new({name => 'Powers', count => $max, remove => 1});
-  $progress->minor(0);
-  my $next_update = 0;
+    my $progress = Term::ProgressBar->new({name => 'Powers', count => $max, remove => 1});
+    $progress->minor(0);
+    my $next_update = 0;
 
-  for (0..$max) {
-    my $is_power = 0;
-    for(my $i = 0; 2**$i <= $_; $i++) {
-      $is_power = 1
-        if 2**$i == $_;
+    for (0..$max) {
+        my $is_power = 0;
+        for (my $i = 0; 2**$i <= $_; $i++) {
+            $is_power = 1 if 2**$i == $_;
+        }
+
+        $next_update = $progress->update($_) if $_ >= $next_update;
     }
 
-    $next_update = $progress->update($_)
-      if $_ >= $next_update;
-  }
-  $progress->update($max)
-    if $max >= $next_update;
+    $progress->update($max) if $max >= $next_update;
 
 This example does two things to improve efficiency: firstly, it uses the value
 returned by L<update|"update"> to only call it again when needed; secondly, it
@@ -166,43 +166,43 @@ of lines may not be known. Term::ProgressBar handles this by just taking '-1' as
 the count value and with no further changes to the code. By calling update
 with the same count value, you ensure the progress bar is removed afterwards.
 
-  my $input_file = shift;
-  my $output_file = shift;
-  my $in_fh = \*STDIN;
-  my $out_fh = \*STDOUT;
-  my $message_fh = \*STDERR;
-  my $num_lines = -1;
+    my $input_file = shift;
+    my $output_file = shift;
+    my $in_fh = \*STDIN;
+    my $out_fh = \*STDOUT;
+    my $message_fh = \*STDERR;
+    my $num_lines = -1;
 
-  if(defined($input_file) and $input_file ne '-') {
-    open($in_fh, $input_file) or die "Couldn't open file, '$input_file': $!";
-    my $wc_output = `wc -l $input_file`;
-    chomp($wc_output);
-    $wc_output =~ /^\s*(\d+)(\D.*)?/ or die "Couldn't parse wc output: $wc_output";
-    $num_lines = $1;
-  }
+    if (defined($input_file) and $input_file ne '-') {
+        open($in_fh, $input_file) or die "Couldn't open file, '$input_file': $!";
+        my $wc_output = `wc -l $input_file`;
+        chomp($wc_output);
+        $wc_output =~ /^\s*(\d+)(\D.*)?/ or die "Couldn't parse wc output: $wc_output";
+        $num_lines = $1;
+    }
 
-  if(defined($output_file)) {
-    !-f $output_file or die "Specified output file, '$output_file', already exists";
-    open($out_fh, '>', $output_file) or die "Couldn't open output file, '$output_file': $!";
-  }
+    if(defined($output_file)) {
+        !-f $output_file or die "Specified output file, '$output_file', already exists";
+        open($out_fh, '>', $output_file) or die "Couldn't open output file, '$output_file': $!";
+    }
 
-  my $progress = Term::ProgressBar->new({
-    name  => 'file processor',
-    count  => $num_lines,
-    remove  => 1,
-    fh    => $message_fh,
-  });
+    my $progress = Term::ProgressBar->new({
+        name   => 'file processor',
+        count  => $num_lines,
+        remove => 1,
+        fh     => $message_fh,
+    });
 
-  while(my $line = <$in_fh>) {
-    chomp($line);
-    print $out_fh "I found a line: $line\n";
-    $progress->message("Found 10000!") if($line =~ /10000/);
-    $progress->update();
-  }
+    while (my $line = <$in_fh>) {
+        chomp($line);
+        print $out_fh "I found a line: $line\n";
+        $progress->message("Found 10000!") if($line =~ /10000/);
+        $progress->update();
+    }
 
-  $progress->update($num_lines);
+    $progress->update($num_lines);
 
-  print $message_fh "Finished\n";
+    print $message_fh "Finished\n";
 
 When the file is defined explicitly, the progress bar displays the linewise
 progress through the file. Since the progress bar by default prints output to
@@ -210,19 +210,21 @@ stderr, your scripts output to STDOUT will not be affected.
 
 =head2 Using Completion Time Estimation
 
-  my $progress = Term::ProgressBar->new({name  => 'Powers',
-                                         count => $max,
-                                         ETA   => 'linear', });
-  $progress->max_update_rate(1);
-  my $next_update = 0;
+    my $progress = Term::ProgressBar->new({
+        name  => 'Powers',
+        count => $max,
+        ETA   => 'linear',
+    });
+    $progress->max_update_rate(1);
+    my $next_update = 0;
 
-  for (0..$max) {
-    my $is_power = 0;
-    for(my $i = 0; 2**$i <= $_; $i++) {
-      if ( 2**$i == $_ ) {
-        $is_power = 1;
-        $progress->message(sprintf "Found %8d to be 2 ** %2d", $_, $i);
-      }
+    for (0..$max) {
+        my $is_power = 0;
+        for (my $i = 0; 2**$i <= $_; $i++) {
+        if ( 2**$i == $_ ) {
+            $is_power = 1;
+            $progress->message(sprintf "Found %8d to be 2 ** %2d", $_, $i);
+        }
     }
 
     $next_update = $progress->update($_)
@@ -361,8 +363,8 @@ a number, being equivalent to the C<count> key.
 The item count.  The progress is marked at 100% when update I<count> is
 invoked, and proportionally until then.
 
-If you specify a count less than zero, just the name (if specified) will be 
-displayed and (if the remove flag is set) removed when the progress bar is 
+If you specify a count less than zero, just the name (if specified) will be
+displayed and (if the remove flag is set) removed when the progress bar is
 updated with a number lower than zero. This allows you to use the progress bar
 when the count is sometimes known and sometimes not without making multiple
 changes throughout your code.
@@ -802,11 +804,11 @@ sub update {
   my $name = $self->name;
   my $fh = $self->fh;
 
-  
+
   if ( $target < 0 ) {
     if($input_so_far <= 0 or $input_so_far == $self->last_update) {
       print $fh "\r", ' ' x $self->term_width, "\r";
-      
+
       if(defined $name) {
         if(!$self->remove or $input_so_far >= 0) {
           print $fh "$name...";
@@ -1024,7 +1026,7 @@ Significant contributions from Ed Avis, amongst others.
 
 Gabor Szabo L<http://szabgab.com/> L<http://perlmaven.com/>
 
-=head1 COPYRIGHT
+=head1 LICENSE AND COPYRIGHT
 
 Copyright (c) 2001, 2002, 2003, 2004, 2005 Martyn J. Pearce.  This program is
 free software; you can redistribute it and/or modify it under the same terms
@@ -1032,6 +1034,6 @@ as Perl itself.
 
 =cut
 
-1; # keep require happy.
+1;
 
 __END__
