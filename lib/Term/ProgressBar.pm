@@ -934,7 +934,7 @@ sub update {
        unless $self->scale == 1;
     } else {
       my $pc = int(100*$input_so_far/$target);
-      printf $fh "[%s] %s: %3d%%\n", scalar(localtime), $name, $pc;
+      printf $fh "[%s] %s: %3d%%\n", scalar(localtime), ($name || ''), $pc;
 
       $next = ceil($target * ($pc+1)/100);
     }
