@@ -3,7 +3,7 @@ package Term::ProgressBar;
 use strict;
 use warnings;
 
-our $VERSION = '2.21';
+our $VERSION = '2.22';
 
 #XXX TODO Redo original test with count=20
 #         Amount Output
@@ -22,7 +22,7 @@ Term::ProgressBar - provide a progress meter on a standard terminal
 
 =head1 VERSION
 
-Version 2.21
+Version 2.22
 
 =head1 SYNOPSIS
 
